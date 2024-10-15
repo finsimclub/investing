@@ -1,0 +1,49 @@
+.scrollable-x {
+    background-color: #333;
+    overflow: auto;
+    white-space: nowrap;
+    padding: 14px;
+}
+
+label {
+    font-family: 'Lato', 'Merriweather', 'Roboto', 'Open Sans';
+    font-size: small;
+    font-weight: 200;
+}
+
+select {
+    border: 2px solid slategrey;
+    border-radius: 10px;    
+}
+
+input {
+    border: 2px solid slategrey;
+    border-radius: 10px;
+}
+
+div > #asset {
+    display: inline-block;
+    background-color: lightgray;
+    padding: 14px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    width: 300px;
+}
+
+div > #rollup {
+    display: inline-block;
+    background-color: lightgray;
+    padding: 14px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    width: 300px;
+}
+
+div.scrollable-x > .asset {
+    display: inline-block;
+    background-color: white;
+    padding: 14px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    width: 300px;
+}
