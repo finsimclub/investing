@@ -44,31 +44,35 @@
                                     <input type="date" name="finishDate" required />
                                 </div>
                                 <div style="float: left">
-                                    <label class="hidable" for="monthsRemaining" style="display: none">Months</label><br class="hidable" style="display: none" />
-                                    <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" placeholder="months" />
-                                    <label class="hidable" for="fundingSource" style="display: none">Pay with</label><br class="hidable" style="display: none" />
-                                    <select class="hidable" style="display: none" name="fundingSource">
-                                        <option value="none">None</option>
-                                    </select>
+                                    <label for="finishValue">Finish Value</label><br />
+                                    <input type="number" style="width: 100px" name="finishValue" placeholder="computed" disabled />
                                 </div>
                             </div>
                             <div style="float: left; width: 100%; padding: 10px">
                                 <label for="annualReturnRate">Annual Return %</label><br />
                                 <input type="number" name="annualReturnRate" step="0.01" placeholder="annual return rate" required /><br />                                
                             </div>
+                            <div style="float: left; width: 100%; padding: 10px">
+                                <label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
+                                <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" placeholder="months" />
+                                <label class="hidable" for="fundingSource" style="display: none">Pay With</label><br class="hidable" style="display: none" />
+                                <select class="hidable" style="display: none" name="fundingSource">
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
                         </div>
                         <input type="submit" value="Create" />
                     </form>
                 </div>
-                <div style="float: right; padding: 10px">
-                    <h3>Rolled Up Finances</h3>
+                <div style="float: right; width: 30%; padding: 10px">
+                    <h3>Rolled Up Financial Data</h3>
                     <form id="rollup">
                         <div style="overflow: hidden; padding: 10px;">
                             <div style="float: left; width: 100%; padding: 10px;">
                                 <label for="instrument">Financial Instrument</label><br />
                                 <input type="text" name="instrument" value="All Instruments"/><br />
                                 <label for="displayName">Familiar Name</label><br />
-                                <input type="text" name="displayName" placeholder="familiar name" /><br />
+                                <input type="text" name="displayName" placeholder="familiar name" />
                             </div>
                             <div style="float: left; width: 100%; padding: 10px;">
                                 <div style="float: left">
@@ -77,22 +81,22 @@
                                 </div>
                                 <div style="float: left">
                                     <label for="startValue">Start Value</label><br />
-                                    <input type="number" style="width: 100px" id="summaryStartValue" name="startValue" placeholder="dollar amount at start date" readonly />
+                                    <input type="number" style="width: 100px" id="summaryStartValue" name="startValue" step="0.01" placeholder="computed" readonly />
                                 </div>
                             </div>
                             <div style="float: left; width: 100%; padding: 10px">
                                 <div style="float: left">
                                     <label for="finishDate">Finish Date</label><br />
-                                    <input type="date" id="summaryFinishDate" name="finishDate" readonly /><br />
+                                    <input type="date" id="summaryFinishDate" name="finishDate" readonly />
                                 </div>
-                                <div style="float: left; width: 100px">
-                                    <label for="monthsRemaining">Accrued Months</label><br />
-                                    <input type="number" style="width: 100px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly />
+                                <div style="float: left">
+                                    <label for="finishValue">Finish Value</label><br />
+                                    <input type="number" style="width: 100px" id="summaryFinishValue" name="finishValue" step="0.01" placeholder="computed" readonly />                                
                                 </div>
                             </div>
                             <div style="float: left; width: 100%; padding: 10px">
-                                <label for="finishValue">Finish Value</label><br />
-                                <input type="number" id="summaryFinishValue" name="finishValue" step="0.01" placeholder="dollar amount at finish date" readonly /><br />
+                                <label for="monthsRemaining">Accrued Months</label><br />
+                                <input type="number" style="width: 100px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly /><br />
                                 <label for="accumulatedValue">Accumulated Value</label><br />                                
                                 <input type="number" id="summaryAccumulatedValue" name="accumulatedValue" step="0.01" placeholder="accumulated value" readonly /><br />
                                 <label for="annualReturnRate">Annual Return %</label><br />

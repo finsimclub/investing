@@ -22,7 +22,7 @@ const htmlAssetBody =
     </div>
     <div style="float: left">
         <label for="startValue">Start Value</label><br />
-        <input type="number" style="width: 100px" name="startValue" value="$STARTVALUE$" placeholder="dollar amount at start date" required />
+        <input type="number" style="width: 100px" name="startValue" value="$STARTVALUE$" step="0.01" placeholder="dollar amount at start date" required />
     </div>
 </div>
 <div style="float: left; width: 100%; padding: 10px;">
@@ -31,21 +31,23 @@ const htmlAssetBody =
         <input type="date" name="finishDate" value="$FINISHDATE$" required />
     </div>
     <div style="float: left">
-        <label for="monthsRemaining" style="$MONTHSREMAININGDISPLAY$">Months</label><br class="hidable" style="$MONTHSREMAININGDISPLAY$" />
-        <input type="number" style="width: 100px; $MONTHSREMAININGDISPLAY$" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
-        <label class="hidable" for="fundingSource" style="$FUNDINGSOURCEDISPLAY$">Pay with</label><br class="hidable" style="$FUNDINGSOURCEDISPLAY$" />
-        <select class="hidable" style="$FUNDINGSOURCEDISPLAY$" name="fundingSource">
-            $FUNDINGSOURCEOPTIONS$
-        </select>
+        <label for="finishValue">Finish Value</label><br />
+        <input type="number" style="width: 100px" name="finishValue" value="$FINISHVALUE$" step="0.01" placeholder="computed" readonly />
     </div>
 </div>
-<div style="float: left; width: 100%; padding: 10px">
-    <label for="finishValue">Finish Value</label><br />
-    <input type="number" style="width: 100px" name="finishValue" value="$FINISHVALUE$" placeholder="dollar amount at start date" required /><br />
+<div style="float: left; width: 100%; padding: 10px">    
     <label for="annualReturnRate">Annual Return %</label><br />
     <input type="number" name="annualReturnRate" step="0.01" value="$ANNUALRETURNRATE$" placeholder="annual return rate" required /><br />
     <label for="accumulatedValue">Accumulated Value</label><br />
     <input type="number" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" /><br />
+</div>
+<div style="float: left; width: 100%; padding: 10px">
+    <label for="monthsRemaining" style="$MONTHSREMAININGDISPLAY$">Months Remaining</label><br class="hidable" style="$MONTHSREMAININGDISPLAY$" />
+    <input type="number" style="width: 100px; $MONTHSREMAININGDISPLAY$" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
+    <label class="hidable" for="fundingSource" style="$FUNDINGSOURCEDISPLAY$">Pay With</label><br class="hidable" style="$FUNDINGSOURCEDISPLAY$" />
+    <select class="hidable" style="$FUNDINGSOURCEDISPLAY$" name="fundingSource">
+        $FUNDINGSOURCEOPTIONS$
+    </select>
 </div>`;
 
 const htmlAssetExpense = '';

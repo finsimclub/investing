@@ -5,7 +5,7 @@ const stackedBarChartConfig = {
       plugins: {
         title: {
           display: true,
-          text: 'Chart.js Bar Chart - Stacked'
+          text: 'Financial Simulation Charted'
         },
       },
       responsive: true,
