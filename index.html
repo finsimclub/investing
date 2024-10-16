@@ -13,7 +13,7 @@
     <body>
         <h1>Financial Simulation (FinSim) Club</h1>
         <div>
-            <button onclick="calculate()">Recalculate</button>&nbsp;<button onclick="save()">Save</button>&nbsp;<button onclick="load()">Load</button>
+            <button onclick="save()">Save</button>&nbsp;<button onclick="load()">Load</button>
         </div>
         <div id="container">
             <div>
@@ -103,6 +103,11 @@
                 </div>                
             </div>     
         </div>
+        <br />
+        <div style="width: 90%; clear: both">
+            <button onclick="calculate()">Recalculate</button>
+        </div>
+        <br />
         <div style="width: 90%" class="scrollable-x" id="assets"></div>
         <div>
             <canvas id="chartCanvas"></canvas>
