@@ -210,6 +210,20 @@
 
                     fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
                     fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
+
+                    assetElements = assetsContainerElement.querySelectorAll('.asset');
+                    let mostRecentAssetElement = assetElements[assetElements.length -1];
+                    
+                    hideElementsWithScope(mostRecentAssetElement);
+                    
+                    if (isMortgage(assetModel.instrument)) {
+                        let monthsElement = mostRecentAssetElement.querySelector('[name="monthsRemaining"]');
+                        displayElementSet(monthsElement, 3);
+                    }
+                    else if (isMonthlyExpenses(assetModel.instrument)) {
+                        let fundingElement = mostRecentAssetElement.querySelector('[name="fundingSource"]');
+                        displayElementSet(fundingElement, 6);
+                    };
                     
                     calculate();
                 });                                            
@@ -246,7 +260,7 @@
             function calculate() {
                 let modelAssets = membrane_htmlElementsToAssetModels();
                 chronometer_applyMonths(modelAssets);
-                assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
+
                 let jsonChartData = charting_buildFromModelAssets(modelAssets)
                 innerCalculate(jsonChartData);
             };

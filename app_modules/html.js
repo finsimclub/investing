@@ -44,10 +44,10 @@ const htmlAssetBody =
 <div style="float: left; width: 100%; padding: 10px">
     <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
     <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
-    <label class="hidable" for="monthsRemaining" style="$MONTHSREMAININGDISPLAY$">Months Remaining</label><br class="hidable" style="$MONTHSREMAININGDISPLAY$" />
-    <input class="hidable" type="number" style="width: 100px; $MONTHSREMAININGDISPLAY$" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
-    <label class="hidable" for="fundingSource" style="$FUNDINGSOURCEDISPLAY$">Pay With</label><br class="hidable" style="$FUNDINGSOURCEDISPLAY$" />
-    <select class="hidable" style="$FUNDINGSOURCEDISPLAY$" name="fundingSource">
+    <label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
+    <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
+    <label class="hidable" for="fundingSource" style="display: none">Pay With</label><br class="hidable" style="display: none" />
+    <select class="hidable" style="display: none" name="fundingSource">
         $FUNDINGSOURCEOPTIONS$
     </select>
 </div>`;
@@ -112,17 +112,7 @@ function html_buildRemovableAssetElement(modelAsset) {
     if ('accumulatedCurrency' in modelAsset)
         html = html.replace('$ACCUMULATEDVALUE$', modelAsset.accumulatedCurrency.toHTML());
     else
-        html = html.replace('$ACCUMULATEDVALUE$', '0.0');
-    
-    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument))
-        html = html.replaceAll('$MONTHSREMAININGDISPLAY$', '');
-    else
-        html = html.replaceAll('$MONTHSREMAININGDISPLAY$', 'display: none');
-
-    if (isMonthlyExpenses(modelAsset.instrument))
-        html = html.replaceAll('$FUNDINGSOURCEDISPLAY$', '');
-    else
-        html = html.replaceAll('$FUNDINGSOURCEDISPLAY$', 'display: none');        
+        html = html.replace('$ACCUMULATEDVALUE$', '0.0');   
 
     if (modelAsset.accumulatedCurrency.amount > 0)
         html = html.replace('$BACKGROUND-COLOR$', positiveBackgroundColor + ';');
