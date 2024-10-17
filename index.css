@@ -47,3 +47,7 @@ div.scrollable-x > .asset {
     border-radius: 10px;
     width: 300px;
 }
+
+.invisible {
+    visibility: hidden;
+}

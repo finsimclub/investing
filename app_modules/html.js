@@ -42,8 +42,10 @@ const htmlAssetBody =
     <input type="number" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" /><br />
 </div>
 <div style="float: left; width: 100%; padding: 10px">
-    <label for="monthsRemaining" style="$MONTHSREMAININGDISPLAY$">Months Remaining</label><br class="hidable" style="$MONTHSREMAININGDISPLAY$" />
-    <input type="number" style="width: 100px; $MONTHSREMAININGDISPLAY$" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
+    <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
+    <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
+    <label class="hidable" for="monthsRemaining" style="$MONTHSREMAININGDISPLAY$">Months Remaining</label><br class="hidable" style="$MONTHSREMAININGDISPLAY$" />
+    <input class="hidable" type="number" style="width: 100px; $MONTHSREMAININGDISPLAY$" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
     <label class="hidable" for="fundingSource" style="$FUNDINGSOURCEDISPLAY$">Pay With</label><br class="hidable" style="$FUNDINGSOURCEDISPLAY$" />
     <select class="hidable" style="$FUNDINGSOURCEDISPLAY$" name="fundingSource">
         $FUNDINGSOURCEOPTIONS$

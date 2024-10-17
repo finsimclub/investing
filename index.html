@@ -53,10 +53,12 @@
                                 <input type="number" name="annualReturnRate" step="0.01" placeholder="annual return rate" required /><br />                                
                             </div>
                             <div style="float: left; width: 100%; padding: 10px">
-                                <label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
-                                <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" placeholder="months" />
-                                <label class="hidable" for="fundingSource" style="display: none">Pay With</label><br class="hidable" style="display: none" />
-                                <select class="hidable" style="display: none" name="fundingSource">
+                                <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
+                                <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
+                                <label class="hidable" style="display: none;" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none;" />
+                                <input class="hidable" type="number" style="display: none; width: 100px" name="monthsRemaining" placeholder="months" />
+                                <label class="hidable" style="display: none;" for="fundingSource">Pay With</label><br class="hidable" style="display: none;" />
+                                <select class="hidable" style="display: none;" name="fundingSource">
                                     <option value="none">None</option>
                                 </select>
                             </div>
@@ -145,14 +147,19 @@
             }
 
             function hideElementsWithScope(scopeElement) {
-                let hidableElements = assetElement.querySelectorAll('.hidable');
+                let invisibleElements = scopeElement.querySelectorAll('.invisible');
+                invisibleElements.forEach(invisibleElement => {
+                    invisibleElement.style.display = '';
+                });
+
+                let hidableElements = scopeElement.querySelectorAll('.hidable');
                 hidableElements.forEach(hidableElement => {
                     hidableElement.style.display = 'none';
                 });
             }
 
-            function connectAssetSelectToMonths() {
-                console.log('connectAssetSelecToMonths');
+            function connectAssetSelect() {
+                console.log('connectAssetSelect');
                 let instrumentElement = assetElement.querySelector('[name="instrument"]')
                 let monthsElement = assetElement.querySelector('[name="monthsRemaining"]');
                 let fundingElement = assetElement.querySelector('[name="fundingSource"]');
@@ -160,11 +167,11 @@
                 instrumentElement.addEventListener('change', function(event) {
                     hideElementsWithScope(assetElement);
                     if (isMortgage(event.target.value) || isDebt(event.target.value)) {
-                        displayElementSet(monthsElement, 0);
+                        displayElementSet(monthsElement, 3);
                     }
                     // TODO - a better way to hide labels than child position
                     else if (isMonthlyExpenses(event.target.value)) {
-                        displayElementSet(fundingElement, 3);
+                        displayElementSet(fundingElement, 6);
                     }
                 });
 
@@ -173,18 +180,18 @@
                 });
             }
 
-            function connectAssetsContainerSelectsToMonths() {
-                console.log('connectAssetsContainerSelectsToMonths');
+            function connectAssetsContainerSelects() {
+                console.log('connectAssetsContainerSelects');
                 assetsContainerElement.addEventListener('change', function(event) {
                     if (event.target.name == 'instrument') {
-                        hideElementsWithScope(event.target.parentElement);
+                        hideElementsWithScope(event.target.parentElement.parentElement);
                         if (isMortgage(event.target.value)) {
                             let monthsElement = event.target.parentElement.parentElement.querySelector('[name="monthsRemaining"]');
-                            displayElementSet(monthsElement, 0);
+                            displayElementSet(monthsElement, 3);
                         }
                         else if (isMonthlyExpenses(event.target.value)) {
                             let fundingElement = event.target.parentElement.parentElement.querySelector('[name="fundingSource"]');
-                            displayElementSet(fundingElement, 3);
+                            displayElementSet(fundingElement, 6);
                         };
                     }
                     else if (event.target.name == 'fundingSource') {
@@ -225,8 +232,8 @@
 
             buildInstrumentOptions();
             initiateStartDate();            
-            connectAssetSelectToMonths();
-            connectAssetsContainerSelectsToMonths();
+            connectAssetSelect();
+            connectAssetsContainerSelects();
             connectCreateAsset();
             connectRemoveAsset();
         </script>
@@ -260,14 +267,6 @@
                 assetsContainerElement.innerHTML = assetsContainerElementInnerHTML;
                 calculate();
             }
-
-            function testData() {
-                document.getElementsByName('startDate')[0].value = '2024-08-01';
-                document.getElementsByName('startValue')[0].value = 1000;
-                document.getElementsByName('finishDate')[0].value = '2024-12-31';
-                document.getElementsByName('annualReturnRate')[0].value = 5.0;                
-            }
-
         </script>
     </body>
 </html>

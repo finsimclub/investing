@@ -276,7 +276,13 @@ function isFundableAsset(value) {
 }
 
 function displayElementSet(sourceElement, startIndex) {
+    // hide invisible placeholders
+    sourceElement.parentElement.children[0].style.display = 'none';
+    sourceElement.parentElement.children[1].style.display = 'none';
+    sourceElement.parentElement.children[2].style.display = 'none';
+
+    // show the element set
     sourceElement.parentElement.children[startIndex].style.display = '';
     sourceElement.parentElement.children[startIndex+1].style.display = '';
-    sourceElement.style.display = ''
+    sourceElement.style.display = '';
 }
