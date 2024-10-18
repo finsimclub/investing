@@ -133,7 +133,7 @@ function html_buildRemovableAssetElement(modelAsset) {
     else
         html = html.replace('$ACCUMULATEDVALUE$', '0.0');   
 
-    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument) || isMonthlyExpenses(modelAsset.instrument)) {
+    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument) || isMonthlyExpenses(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
         html = html.replace('$INVISIBLEPLACEHOLDER$', htmlInvisibleHidden);
         if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument)) {
             html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingDisplay);

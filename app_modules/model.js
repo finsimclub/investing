@@ -122,6 +122,8 @@ class ModelAsset {
         this.monthlyData = [];
         this.monthsRemainingDynamic = this.monthsRemaining;
         this.finishCurrency.zero();
+
+        // bump 
     }
 
     applyMonth_common(isInMonth) {
@@ -252,11 +254,9 @@ class ModelAsset {
     }
 
     getFinishCurrencyForRollup() {
-        if (isMortgage(this.instrument))
+        if (isMortgage(this.instrument) || isDebt(this.instrument))
             return this.accumulatedCurrency;
-        if (isDebt(this.instrument))
-            return this.accumulatedCurrency;
-        else if (isMonthlyExpenses(this.instrument))
+        else if (isMonthlyExpenses(this.instrument) || isMonthlyIncome(this.instrument))
             return this.accumulatedCurrency;
         else
             return this.finishCurrency;
