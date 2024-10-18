@@ -178,11 +178,16 @@ class ModelAsset {
 
     }
 
-    applyMonth_expenses(isInMonth) {
+    applyMonth_expensesOrIncome(isInMonth) {
 
         // the customization here will be which buckets to debit from
 
-        if (this.startCurrency.amount > 0) {
+        if (isMonthlyExpenses(this.instrument) && this.startCurrency.amount > 0) {
+            this.startCurrency.amount *= -1;
+            this.finishCurrency.amount *= -1;
+        }
+
+        if (isMonthlyIncome(this.instrument) && this.startCurrency.amount < 0) {
             this.startCurrency.amount *= -1;
             this.finishCurrency.amount *= -1;
         }
@@ -222,8 +227,8 @@ class ModelAsset {
         else if (isDebt(this.instrument)) {
             this.applyMonth_debt(isInMonth);
         }
-        else if (isMonthlyExpenses(this.instrument)) {
-            this.applyMonth_expenses(isInMonth);
+        else if (isMonthlyExpenses(this.instrument) || isMonthlyIncome(this.instrument)) {
+            this.applyMonth_expensesOrIncome(isInMonth);
         }
         else {
             this.applyMonth_common(isInMonth);

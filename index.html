@@ -261,6 +261,10 @@
                 let modelAssets = membrane_htmlElementsToAssetModels();
                 chronometer_applyMonths(modelAssets);
 
+                // use the updated modelAssets to produce the updated html
+                assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
+
+                // then build the chart
                 let jsonChartData = charting_buildFromModelAssets(modelAssets)
                 innerCalculate(jsonChartData);
             };

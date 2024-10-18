@@ -42,15 +42,32 @@ const htmlAssetBody =
     <input type="number" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" /><br />
 </div>
 <div style="float: left; width: 100%; padding: 10px">
-    <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
-    <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
-    <label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
-    <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />
-    <label class="hidable" for="fundingSource" style="display: none">Pay With</label><br class="hidable" style="display: none" />
+    $INVISIBLEPLACEHOLDER$
+    $MONTHSREMAININGDISPLAY$
+    $FUNDINGSOURCEDISPLAY$
+</div>`;
+
+const htmlInvisibleDisplay = `<label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
+    <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />`;
+
+const htmlInvisibleHidden = `<label class="invisible" style="display: none" for="invisiblePlaceholder">Invisible</label><br class="invisible" style="display: none" />
+    <input class="invisible" type="number" style="width: 100px; display: none" name="invisiblePlaceholder" placeholder="invisible" />`;
+
+const htmlMonthsRemainingDisplay = `<label class="hidable" for="monthsRemaining">Months Remaining</label><br class="hidable" />
+    <input class="hidable" type="number" style="width: 100px" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
+
+const htmlMonthsRemainingHidden = `<label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
+    <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
+
+const htmlFundingSourceDisplay = `<label class="hidable" for="fundingSource">Pay With</label><br class="hidable" />
+    <select class="hidable" name="fundingSource">
+        $FUNDINGSOURCEOPTIONS$
+    </select>`;
+
+const htmlFundingSourceHidden = `<label class="hidable" for="fundingSource" style="display: none">Pay With</label><br class="hidable" style="display: none" />
     <select class="hidable" style="display: none" name="fundingSource">
         $FUNDINGSOURCEOPTIONS$
-    </select>
-</div>`;
+    </select>`;
 
 const htmlAssetExpense = '';
 
@@ -91,28 +108,53 @@ function html_buildAssetHeader(instrument) {
     return html.replace('$INSTRUMENTOPTIONS$', html_buildInstrumentOptions(instrument));     
 }
 
-function html_buildAssetBody(fundingSource) {
-    let html = htmlAssetBody;
-    return html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(fundingSource));
-}
+//function html_buildAssetBody(fundingSource) {
+//    let html = htmlAssetBody;
+//    return html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(fundingSource));
+//}
 
 function html_buildRemovableAssetElement(modelAsset) {
     let html = (html_buildAssetHeader(modelAsset.instrument)).slice();
-    html = html.replace('$ASSETPROPERTIES$', html_buildAssetBody(modelAsset.fundingSource));
+    html = html.replace('$ASSETPROPERTIES$', htmlAssetBody); // html_buildAssetBody(modelAsset.fundingSource));
     html = html.replace('$DISPLAYNAME$', modelAsset.displayName);
     html = html.replace('$STARTDATE$', modelAsset.startDateInt.toHTML());
     html = html.replace('$STARTVALUE$', modelAsset.startCurrency.toHTML());
     html = html.replace('$FINISHDATE$', modelAsset.finishDateInt.toHTML());
-    html = html.replace('$MONTHSREMAINING$', modelAsset.monthsRemaining.toString());
+
     if ('finishCurrency' in modelAsset )
         html = html.replace('$FINISHVALUE$', modelAsset.finishCurrency.toHTML());
     else
         html = html.replace("$FINISHVALUE$", '0.0');
+
     html = html.replace('$ANNUALRETURNRATE$', modelAsset.annualReturnRate.toHTML());
+
     if ('accumulatedCurrency' in modelAsset)
         html = html.replace('$ACCUMULATEDVALUE$', modelAsset.accumulatedCurrency.toHTML());
     else
         html = html.replace('$ACCUMULATEDVALUE$', '0.0');   
+
+    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument) || isMonthlyExpenses(modelAsset.instrument)) {
+        html = html.replace('$INVISIBLEPLACEHOLDER$', htmlInvisibleHidden);
+        if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument)) {
+            html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingDisplay);
+            html = html.replace("$FUNDINGSOURCEDISPLAY$", htmlFundingSourceHidden);      
+        }
+        else if (isMonthlyExpenses(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
+            html = html.replace('$FUNDINGSOURCEDISPLAY$', htmlFundingSourceDisplay);
+            html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingHidden);
+        }
+        else {
+            console.log('html_buildRemovableAssetElement - confused by isMortgage, isDebt, isMonthlyExpese');
+        }
+    }
+    else {
+        html = html.replace('$INVISIBLEPLACEHOLDER$', htmlInvisibleDisplay);
+        html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingHidden);
+        html = html.replace('$FUNDINGSOURCEDISPLAY$', htmlFundingSourceHidden);
+    }
+
+    html = html.replace('$MONTHSREMAINING$', modelAsset.monthsRemaining);  
+    html = html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(modelAsset.fundingSource));
 
     if (modelAsset.accumulatedCurrency.amount > 0)
         html = html.replace('$BACKGROUND-COLOR$', positiveBackgroundColor + ';');
@@ -120,6 +162,7 @@ function html_buildRemovableAssetElement(modelAsset) {
         html = html.replace('$BACKGROUND-COLOR$', negativeBackgroundColor + ';');
     else
         html = html.replace('$BACKGROUND-COLOR$', 'white');
+
     return html;
 }
 

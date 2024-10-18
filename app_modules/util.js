@@ -254,6 +254,10 @@ function isMonthlyExpenses(value) {
     return value == sInstrumentNames[sInstrumentsIDs.monthlyExpenses];
 }
 
+function isMonthlyIncome(value) {
+    return value == sInstrumentNames[sInstrumentsIDs.income];
+}
+
 function isFundableAsset(value) {
     if (value == sInstrumentNames[sInstrumentsIDs.income])
         return true;
