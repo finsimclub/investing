@@ -1,22 +1,24 @@
 function chronometer_applyMonths(modelAssets) {
-    for (modelAsset of modelAssets) {
-        modelAsset.startMonth();
+    if (modelAssets != null && modelAssets.length > 0) {
+        for (modelAsset of modelAssets) {
+            modelAsset.startMonth();
+        }
+
+        const firstDateInt = util_firstDateInt(modelAssets);
+        const lastDateInt = util_lastDateInt(modelAssets);
+
+        summary_setStartDate(firstDateInt);
+        summary_setFinishDate(lastDateInt);
+        let totalMonths = 0;
+
+        let currentDateInt = new DateInt(firstDateInt.toInt());
+        while (currentDateInt.toInt() <= lastDateInt.toInt()) {
+            totalMonths += chronometer_applyMonth(currentDateInt, modelAssets);
+            currentDateInt.next();
+        }
+
+        summary_setAccruedMonths(totalMonths);
     }
-
-    const firstDateInt = util_firstDateInt(modelAssets);
-    const lastDateInt = util_lastDateInt(modelAssets);
-
-    summary_setStartDate(firstDateInt);
-    summary_setFinishDate(lastDateInt);
-    let totalMonths = 0;
-
-    let currentDateInt = new DateInt(firstDateInt.toInt());
-    while (currentDateInt.toInt() <= lastDateInt.toInt()) {
-        totalMonths += chronometer_applyMonth(currentDateInt, modelAssets);
-        currentDateInt.next();
-    }
-
-    summary_setAccruedMonths(totalMonths);
 }
 
 function chronometer_applyMonth(currentDateInt, modelAssets) {

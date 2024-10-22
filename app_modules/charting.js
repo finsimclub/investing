@@ -120,6 +120,9 @@ function charting_buildDisplayLabels(firstDateInt, lastDateInt) {
 }
 
 function charting_buildFromModelAssets(modelAssets) {
+    if (modelAssets == null || modelAssets.length == 0)
+      return null;
+    
     let chartingConfig = JSON.parse(JSON.stringify(stackedBarChartConfig));    
     let chartingData = JSON.parse(JSON.stringify(stackedChartingData));
 

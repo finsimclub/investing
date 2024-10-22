@@ -272,7 +272,8 @@
             function innerCalculate(jsonData) {              
                 if (activeChart != null)
                     activeChart.destroy();
-                activeChart = new Chart(ctx, jsonData);
+                if (jsonData != null)
+                    activeChart = new Chart(ctx, jsonData);
             }
 
             function save() {
