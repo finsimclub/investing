@@ -1,0 +1,291 @@
+<html>
+    <header>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="js/charting.js"></script>
+        <script src="js/chronometer.js"></script>
+        <script src="js/html.js"></script>
+        <script src="js/membrane.js"></script>
+        <script src="js/model.js"></script>
+        <script src="js/summary.js"></script>
+        <script src="js/util.js"></script>
+        <link rel="stylesheet" href="index.css">
+    </header>
+    <body>
+        <h1>Financial Simulation (FinSim) Club</h1>
+        <div>
+            <button onclick="save()">Save</button>&nbsp;<button onclick="load()">Load</button>
+        </div>
+        <div id="container">
+            <div>
+                <div style="float: left; padding: 10px">
+                    <h3>Enter Financial Data</h3>
+                    <form id="asset" class="asset">
+                        <div style="overflow: hidden; padding: 10px;">
+                            <div style="float: left; padding: 10px;">
+                                <label for="instrument">Financial Instrument</label><br />
+                                <select style="width: 100%" name="instrument">                                
+                                </select><br />
+                                <label for="displayName">Familiar Name</label>
+                                <input type="text" style="width: 100%" name="displayName" placeholder="familiar name" /><br />
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px;">
+                                <div style="float: left;">
+                                    <label for="startDate">Start Date</label><br />
+                                    <input type="date" name="startDate" required />
+                                </div>
+                                <div style="float: left">
+                                    <label for="startValue">Start Value</label><br />
+                                    <input type="number" style="width: 100px" name="startValue" placeholder="dollar amount at start date" required />
+                                </div>
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px;">
+                                <div style="float: left">
+                                    <label for="finishDate">Finish Date</label><br />
+                                    <input type="date" name="finishDate" required />
+                                </div>
+                                <div style="float: left">
+                                    <label for="finishValue">Finish Value</label><br />
+                                    <input type="number" style="width: 100px" name="finishValue" placeholder="computed" disabled />
+                                </div>
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px">
+                                <label for="annualReturnRate">Annual Return %</label><br />
+                                <input type="number" name="annualReturnRate" step="0.01" placeholder="annual return rate" required /><br />                                
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px">
+                                <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
+                                <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
+                                <label class="hidable" style="display: none;" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none;" />
+                                <input class="hidable" type="number" style="display: none; width: 100px" name="monthsRemaining" placeholder="months" />
+                                <label class="hidable" style="display: none;" for="fundingSource">Pay With</label><br class="hidable" style="display: none;" />
+                                <select class="hidable" style="display: none;" name="fundingSource">
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="submit" value="Create" />
+                    </form>
+                </div>
+                <div style="float: right; width: 30%; padding: 10px">
+                    <h3>Rolled Up Financial Data</h3>
+                    <form id="rollup">
+                        <div style="overflow: hidden; padding: 10px;">
+                            <div style="float: left; width: 100%; padding: 10px;">
+                                <label for="instrument">Financial Instrument</label><br />
+                                <input type="text" name="instrument" value="All Instruments"/><br />
+                                <label for="displayName">Familiar Name</label><br />
+                                <input type="text" name="displayName" placeholder="familiar name" />
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px;">
+                                <div style="float: left">
+                                    <label for="startDate">Start Date</label><br />
+                                    <input type="date" id="summaryStartDate" name="startDate" readonly />
+                                </div>
+                                <div style="float: left">
+                                    <label for="startValue">Start Value</label><br />
+                                    <input type="number" style="width: 100px" id="summaryStartValue" name="startValue" step="0.01" placeholder="computed" readonly />
+                                </div>
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px">
+                                <div style="float: left">
+                                    <label for="finishDate">Finish Date</label><br />
+                                    <input type="date" id="summaryFinishDate" name="finishDate" readonly />
+                                </div>
+                                <div style="float: left">
+                                    <label for="finishValue">Finish Value</label><br />
+                                    <input type="number" style="width: 100px" id="summaryFinishValue" name="finishValue" step="0.01" placeholder="computed" readonly />                                
+                                </div>
+                            </div>
+                            <div style="float: left; width: 100%; padding: 10px">
+                                <label for="monthsRemaining">Accrued Months</label><br />
+                                <input type="number" style="width: 100px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly /><br />
+                                <label for="accumulatedValue">Accumulated Value</label><br />                                
+                                <input type="number" id="summaryAccumulatedValue" name="accumulatedValue" step="0.01" placeholder="accumulated value" readonly /><br />
+                                <label for="annualReturnRate">Annual Return %</label><br />
+                                <input type="number" id="summaryAnnualReturnRate" name="annualReturnRate" step="0.01" placeholder="annual return rate" readonly /><br />
+                            </div>
+                        </div>
+                    </form>
+                </div>                
+            </div>     
+        </div>
+        <br />
+        <div style="width: 90%; clear: both">
+            <button onclick="calculate()">Recalculate</button>
+        </div>
+        <br />
+        <div style="width: 90%" class="scrollable-x" id="assets"></div>
+        <div>
+            <canvas id="chartCanvas"></canvas>
+        </div>
+        <script>
+            <!-- Global Definitions -->
+            var gAssetsAPI = 'http://127.0.0.1:8000/html/assets/';
+            var gChartingAPI = 'http://127.0.0.1:8000/json/charting/'
+        </script>
+        <script>
+            <!-- these are dynamic functions -->
+
+            var containerElement = document.getElementById('container');
+            var assetElement = document.getElementById('asset');
+            var assetsContainerElement = document.getElementById('assets');
+            var totalElement = document.getElementById('total');            
+        </script>
+        <script>
+            <!-- these are initial setup functions -->
+
+            function buildInstrumentOptions() {
+                let selectElement = assetElement.querySelector('[name="instrument"]');
+                selectElement.innerHTML = html_buildInstrumentOptions(null)
+            }
+
+            function initiateStartDate() {
+                console.log('initiateStartDate');
+                let startDateElement = assetElement.querySelector('[name="startDate"]');
+                let di = DateInt.parse(new Date().toISOString());
+                startDateElement.value = di.toISOString();
+            }
+
+            function hideElementsWithScope(scopeElement) {
+                let invisibleElements = scopeElement.querySelectorAll('.invisible');
+                invisibleElements.forEach(invisibleElement => {
+                    invisibleElement.style.display = '';
+                });
+
+                let hidableElements = scopeElement.querySelectorAll('.hidable');
+                hidableElements.forEach(hidableElement => {
+                    hidableElement.style.display = 'none';
+                });
+            }
+
+            function connectAssetSelect() {
+                console.log('connectAssetSelect');
+                let instrumentElement = assetElement.querySelector('[name="instrument"]')
+                let monthsElement = assetElement.querySelector('[name="monthsRemaining"]');
+                let fundingElement = assetElement.querySelector('[name="fundingSource"]');
+
+                instrumentElement.addEventListener('change', function(event) {
+                    hideElementsWithScope(assetElement);
+                    if (isMortgage(event.target.value) || isDebt(event.target.value)) {
+                        displayElementSet(monthsElement, 3);
+                    }
+                    // TODO - a better way to hide labels than child position
+                    else if (isMonthlyExpenses(event.target.value) || isMonthlyIncome(event.target.value)) {
+                        displayElementSet(fundingElement, 6);
+                    }
+                });
+
+                fundingElement.addEventListener('change', function(event) {
+                    console.log('assetElement.fundingElement.change');
+                });
+            }
+
+            function connectAssetsContainerSelects() {
+                console.log('connectAssetsContainerSelects');
+                assetsContainerElement.addEventListener('change', function(event) {
+                    if (event.target.name == 'instrument') {
+                        hideElementsWithScope(event.target.parentElement.parentElement);
+                        if (isMortgage(event.target.value) || isDebt(event.target.value)) {
+                            let monthsElement = event.target.parentElement.parentElement.querySelector('[name="monthsRemaining"]');
+                            displayElementSet(monthsElement, 3);
+                        }
+                        else if (isMonthlyExpenses(event.target.value) || isMonthlyIncome(event.target.value)) {
+                            let fundingElement = event.target.parentElement.parentElement.querySelector('[name="fundingSource"]');
+                            displayElementSet(fundingElement, 6);
+                        };
+                    }
+                    else if (event.target.name == 'fundingSource') {
+                        console.log('assetsContainerElement.fundingElement.change');
+                    }
+                });
+            }
+
+            function connectCreateAsset() {
+                console.log('connectCreateAsset');
+                assetElement.addEventListener("submit", function(ev) {
+                    ev.preventDefault();
+
+                    let assetModel = membrane_htmlElementToAssetModel(assetElement);                                     
+                    assetsContainerElement.innerHTML += html_buildRemovableAssetElement(assetModel);
+
+                    fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
+                    fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
+
+                    assetElements = assetsContainerElement.querySelectorAll('.asset');
+                    let mostRecentAssetElement = assetElements[assetElements.length -1];
+                    
+                    hideElementsWithScope(mostRecentAssetElement);
+                    
+                    if (isMortgage(assetModel.instrument) || isDebt(assetModel.instrument)) {
+                        let monthsElement = mostRecentAssetElement.querySelector('[name="monthsRemaining"]');
+                        displayElementSet(monthsElement, 3);
+                    }
+                    else if (isMonthlyExpenses(assetModel.instrument) || isMonthlyIncome(assetModel.instrument)) {
+                        let fundingElement = mostRecentAssetElement.querySelector('[name="fundingSource"]');
+                        displayElementSet(fundingElement, 6);
+                    };
+                    
+                    calculate();
+                });                                            
+            }
+
+            function connectRemoveAsset() {
+                console.log('connectUpdateOrRemoveAsset');
+                assetsContainerElement.addEventListener('click', function (ev) {
+
+                    if (ev.srcElement.className.includes('remove')) {
+                        ev.preventDefault();
+                        let removeContainerNode = ev.srcElement.parentNode;
+                        while (removeContainerNode.parentNode.id != 'assets')
+                            removeContainerNode = removeContainerNode.parentNode;
+                        assetsContainerElement.removeChild(removeContainerNode);
+                        calculate();
+                    }
+                });
+            }
+
+            buildInstrumentOptions();
+            initiateStartDate();            
+            connectAssetSelect();
+            connectAssetsContainerSelects();
+            connectCreateAsset();
+            connectRemoveAsset();
+        </script>
+        <script>
+            <!-- charting -->
+
+            const ctx = document.getElementById("chartCanvas");
+            var activeChart = null;
+
+            function calculate() {
+                let modelAssets = membrane_htmlElementsToAssetModels();
+                chronometer_applyMonths(modelAssets);
+
+                // use the updated modelAssets to produce the updated html
+                assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
+
+                // then build the chart
+                let jsonChartData = charting_buildFromModelAssets(modelAssets)
+                innerCalculate(jsonChartData);
+            };
+
+            function innerCalculate(jsonData) {              
+                if (activeChart != null)
+                    activeChart.destroy();
+                if (jsonData != null)
+                    activeChart = new Chart(ctx, jsonData);
+            }
+
+            function save() {
+                let assetsContainerElementInnerHTML = assetsContainerElement.innerHTML;
+                localStorage.setItem('assetsContainerElementInnerHTML', assetsContainerElementInnerHTML);
+            }
+
+            function load() {
+                let assetsContainerElementInnerHTML = localStorage.getItem('assetsContainerElementInnerHTML');
+                assetsContainerElement.innerHTML = assetsContainerElementInnerHTML;
+                calculate();
+            }
+        </script>
+    </body>
+</html>
