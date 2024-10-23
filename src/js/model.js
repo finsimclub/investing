@@ -10,7 +10,7 @@ const sAnnualReturnRate = 'annualReturnRate';
 const sFundingSource = 'fundingSource';
 
 const sInstrumentNames = ['home', 'mortgage', 'debt', 'monthlyExpenses', 'income', 'taxableEquity', 'taxDeferredEquity', 'taxFreeEquity', 'usBond', 'corpBond', 'bank', 'cash'];
-const sIntrumentDisplayNames = [String.fromCodePoint(127939) + ' House', '💸🏡 Mortgage', '💳 Debt', '💸💰 Monthly Expenses', '💲💰 Income', '🧾📈 Taxable Account', '⏳📈 Tax Deferred Account', '📈 Tax Free Account', '🏛️ US Treasury', '🏛️ Corporate Bond', '🏦 Savings', '💰 Cash'];
+const sIntrumentDisplayNames = [String.fromCodePoint(876) + ' House', '💸🏡 Mortgage', '💳 Debt', '💸💰 Monthly Expenses', '💲💰 Income', '🧾📈 Taxable Account', '⏳📈 Tax Deferred Account', '📈 Tax Free Account', '🏛️ US Treasury', '🏛️ Corporate Bond', '🏦 Savings', '💰 Cash'];
 const sInstrumentsIDs = Object.freeze({
     home: 0,
     mortgage: 1,
