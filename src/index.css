@@ -1,3 +1,15 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom, #ccd2d4, #818999);
+}
+
+.centered img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .scrollable-x {
     background-color: #333;
     overflow: auto;
