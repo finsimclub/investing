@@ -1,7 +1,17 @@
 body {
     margin: 0;
-    height: 200vh;
-    background: linear-gradient(to bottom, #ccd2d4, #818999);
+    height: 100vh;
+    background: url(./images/A_cartoon_image_of_a_hundred_dollar_bill.png) center no-repeat, linear-gradient(to bottom, #ccd2d4, #818999);
+    background-repeat: no-repeat;
+}
+
+div.background-image {
+    float: left;
+    background: url(./images/A_cartoon_image_of_a_hundred_dollar_bill.png) center;
+    opacity: 0.25;
+    background-size: contain;
+    height: 100%;
+    width: 100%;
 }
 
 .centered img {
