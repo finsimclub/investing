@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
-        <h1>
+        <h1 style="text-align: center;">
             Financial Simulation (FinSim) Club
         </h1>
         <div>
@@ -72,7 +72,7 @@
                         <input type="submit" value="Create" />
                     </form>
                 </div>                
-                <div style="float: right; width: 30%; padding: 10px">
+                <div style="float: right; padding: 10px">
                     <h3>Rolled Up Financial Data</h3>
                     <form id="rollup">
                         <div style="overflow: hidden; padding: 10px;">
@@ -115,13 +115,19 @@
                 </div>                
             </div>     
         </div>
-        <br />
-        <div style="width: 90%; clear: both">
+        <div style="clear: both"></div>
+        &nbsp;<br />
+        &nbsp;<br />
+        &nbsp;<br />
+        <div style="clear: both">
             <button onclick="calculate()">Recalculate</button>
         </div>
         <br />
-        <div style="width: 90%" class="scrollable-x" id="assets"></div>
-        <div>
+        <div style="padding: 10px" class="scrollable-x" id="assets"></div>
+        &nbsp;<br />
+        &nbsp;<br />
+        &nbsp;<br />
+        <div style="padding: 10px">
             <canvas id="chartCanvas"></canvas>
         </div>
         <script>
