@@ -32,12 +32,11 @@
         <h1 style="text-align: center;">
             Financial Simulation (FinSim) Club
         </h1>
-        <div>
+        <div style="text-align: center">
             <button onclick="save()">Save</button>&nbsp;<button onclick="load()">Load</button>
         </div>
-        <div id="container">
-            <div>
-                <div style="float: left; padding: 10px">
+        <div class="row" id="container">
+                <div class="column-data">
                     <h3>Enter Financial Data</h3>
                     <form id="asset" class="asset">
                         <div style="overflow: hidden; padding: 10px;">
@@ -86,7 +85,10 @@
                         <input type="submit" value="Create" />
                     </form>
                 </div>                
-                <div style="float: right; padding: 10px">
+                <div class="column-chart">
+                    <canvas id="chartCanvas"></canvas>
+                </div>
+                <div class="column-data">
                     <h3>Rolled Up Financial Data</h3>
                     <form id="rollup">
                         <div style="overflow: hidden; padding: 10px;">
@@ -127,23 +129,18 @@
                         </div>
                     </form>
                 </div>                
-            </div>     
         </div>
+
         <div style="clear: both"></div>
         &nbsp;<br />
         &nbsp;<br />
         &nbsp;<br />
-        <div style="clear: both">
+        <div style="text-align: center; clear: both">
             <button onclick="calculate()">Recalculate</button>
         </div>
         <br />
         <div style="padding: 10px" class="scrollable-x" id="assets"></div>
-        &nbsp;<br />
-        &nbsp;<br />
-        &nbsp;<br />
-        <div style="padding: 10px">
-            <canvas id="chartCanvas"></canvas>
-        </div>
+        <br />&nbsp;<br />
         <script>
             <!-- Global Definitions -->
             var gAssetsAPI = 'http://127.0.0.1:8000/html/assets/';
