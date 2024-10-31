@@ -4,8 +4,8 @@ class DateInt {
         this.month = yyyyMM - (this.year * 100);
     }
 
-    static parse(yyyyMMdd) {
-        let segments = yyyyMMdd.split('-');
+    static parse(yyyyMM) {
+        let segments = yyyyMM.split('-');
         let year = parseInt(segments[0]);
         let month = parseInt(segments[1]);
         return new DateInt((year * 100) + month);
@@ -39,15 +39,10 @@ class DateInt {
             return this.year.toString() + '-' + this.toTwoMonth() + '-01';
     }
 
-    toHTML(lastDay) {
+    toHTML() {
         let html = this.year.toString() + '-';
         if (this.month < 10) html += '0';
-        html += this.month.toString() + '-';
-        if (lastDay)
-            html += this.toLastDate().toString();
-        else
-            html += '01';
-
+        html += this.month.toString();
         return html;
     }
 

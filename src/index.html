@@ -50,7 +50,7 @@
                             <div style="float: left; width: 100%; padding: 10px;">
                                 <div style="float: left;">
                                     <label for="startDate">Start Date</label><br />
-                                    <input type="date" name="startDate" required />
+                                    <input type="month" name="startDate" required />
                                 </div>
                                 <div style="float: left">
                                     <label for="startValue">Start Value</label><br />
@@ -60,7 +60,7 @@
                             <div style="float: left; width: 100%; padding: 10px;">
                                 <div style="float: left">
                                     <label for="finishDate">Finish Date</label><br />
-                                    <input type="date" name="finishDate" required />
+                                    <input type="month" name="finishDate" required />
                                 </div>
                                 <div style="float: left">
                                     <label for="finishValue">Finish Value</label><br />
@@ -101,7 +101,7 @@
                             <div style="float: left; width: 100%; padding: 10px;">
                                 <div style="float: left">
                                     <label for="startDate">Start Date</label><br />
-                                    <input type="date" id="summaryStartDate" name="startDate" readonly />
+                                    <input type="month" id="summaryStartDate" name="startDate" readonly />
                                 </div>
                                 <div style="float: left">
                                     <label for="startValue">Start Value</label><br />
@@ -111,7 +111,7 @@
                             <div style="float: left; width: 100%; padding: 10px">
                                 <div style="float: left">
                                     <label for="finishDate">Finish Date</label><br />
-                                    <input type="date" id="summaryFinishDate" name="finishDate" readonly />
+                                    <input type="month" id="summaryFinishDate" name="finishDate" readonly />
                                 </div>
                                 <div style="float: left">
                                     <label for="finishValue">Finish Value</label><br />
@@ -166,7 +166,7 @@
                 console.log('initiateStartDate');
                 let startDateElement = assetElement.querySelector('[name="startDate"]');
                 let di = DateInt.parse(new Date().toISOString());
-                startDateElement.value = di.toISOString();
+                startDateElement.value = di.toHTML();
             }
 
             function hideElementsWithScope(scopeElement) {

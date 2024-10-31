@@ -18,7 +18,7 @@ const htmlAssetBody =
 `<div style="float: left; width: 100%; padding: 10px;">
     <div style="float: left;">
         <label for="startDate">Start Date</label><br />
-        <input type="date" name="startDate" value="$STARTDATE$" required />
+        <input type="month" name="startDate" value="$STARTDATE$" required />
     </div>
     <div style="float: left">
         <label for="startValue">Start Value</label><br />
@@ -28,7 +28,7 @@ const htmlAssetBody =
 <div style="float: left; width: 100%; padding: 10px;">
     <div style="float: left">
         <label for="finishDate">Finish Date</label><br />
-        <input type="date" name="finishDate" value="$FINISHDATE$" required />
+        <input type="month" name="finishDate" value="$FINISHDATE$" required />
     </div>
     <div style="float: left">
         <label for="finishValue">Finish Value</label><br />
