@@ -1,6 +1,7 @@
 const htmlAssetHeader = 
 `<form class="asset" style="background-color: $BACKGROUND-COLOR$">
     <div style="overflow: hidden; padding: 10px;">
+        <div style="height: 20px; width: 20px; border-radius: 10px; float: right; background-color: $BACKGROUNDCOLOR$"></div>
         <div style="float: left; padding: 10px;">
             <label for="instrument">Financial Instrument</label><br />
             <select name="instrument">
@@ -75,8 +76,11 @@ const htmlAssets = '<div class="scrollable-x" id="assets"></div>';
 
 const assetBase = 'asset';
 
-const positiveBackgroundColor = '#79ad76';
-const negativeBackgroundColor = '#FC9E9F';
+const positiveBackgroundColor = '#76ad76';
+const negativeBackgroundColor = '#ad7676';
+
+//const colorRange = ['#33cc00','#cc3300','#0033cc','#cc9900','#00cc99','#9900cc','#cc33cc','#cc3333','#556B2F','#8FBC8B'];
+const colorRange = ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6','#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11','#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#651067'];
 
 function html_buildInstrumentOptions(instrument) {
     let html = '';
@@ -103,9 +107,11 @@ function html_buildFundingSourceOptions(fundingSource) {
     return html;
 }
 
-function html_buildAssetHeader(instrument) {
+function html_buildAssetHeader(modelAsset) {
     let html = htmlAssetHeader;
-    return html.replace('$INSTRUMENTOPTIONS$', html_buildInstrumentOptions(instrument));     
+    html = html.replace("$BACKGROUNDCOLOR$", colorRange[modelAsset.colorId]);
+    html = html.replace('$INSTRUMENTOPTIONS$', html_buildInstrumentOptions(modelAsset.instrument));     
+    return html;
 }
 
 //function html_buildAssetBody(fundingSource) {
@@ -114,7 +120,7 @@ function html_buildAssetHeader(instrument) {
 //}
 
 function html_buildRemovableAssetElement(modelAsset) {
-    let html = (html_buildAssetHeader(modelAsset.instrument)).slice();
+    let html = (html_buildAssetHeader(modelAsset)).slice();
     html = html.replace('$ASSETPROPERTIES$', htmlAssetBody); // html_buildAssetBody(modelAsset.fundingSource));
     html = html.replace('$DISPLAYNAME$', modelAsset.displayName);
     html = html.replace('$STARTDATE$', modelAsset.startDateInt.toHTML());

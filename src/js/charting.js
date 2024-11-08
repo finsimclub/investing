@@ -27,8 +27,8 @@ const stackedChartingData = {
 
 const stackedChartingDataSet = {
     label: null,
-    data: null,
-    backgroundColor: 0x000011
+    data: null
+    //backgroundColor: 0x000011
  };
 
 function charting_buildMonthsSpan(firstDateInt, lastDateInt) {
@@ -133,12 +133,12 @@ function charting_buildFromModelAssets(modelAssets) {
     let labels = charting_buildDisplayLabels(firstDateInt, lastDateInt);
     chartingData.labels = labels;
 
-    let id = 1;
+    let colorId = 0;
     for (const modelAsset of modelAssets) {
         let chartingDataSet = JSON.parse(JSON.stringify(stackedChartingDataSet));
         chartingDataSet.label = modelAsset.displayName;
-        chartingDataSet.data = modelAsset.displayData;     
-        chartingDataSet.backgroundColor = chartingData.backgroundColor *= id;
+        chartingDataSet.data = modelAsset.displayData;
+        chartingDataSet.backgroundColor = colorRange[modelAsset.colorId];       
         chartingData.datasets.push(chartingDataSet);
     }
 

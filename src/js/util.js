@@ -285,3 +285,4 @@ function displayElementSet(sourceElement, startIndex) {
     sourceElement.parentElement.children[startIndex+1].style.display = '';
     sourceElement.style.display = '';
 }
+

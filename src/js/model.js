@@ -42,6 +42,7 @@ class ModelAsset {
         this.accumulatedCurrency = new Currency(0.0);
         this.monthlyData = [];
         this.fundingSource = null;
+        this.colorId = 0;
     }
 
     static parseJSON(jsonObject) {
@@ -260,6 +261,14 @@ class ModelAsset {
             return this.accumulatedCurrency;
         else
             return this.finishCurrency;
+    }
+
+    isPositive() {
+        return this.accumulatedCurrency.amount > 0.0;
+    }
+
+    isNegative() {
+        return this.accumulatedCurrency.amount < 0.0;
     }
 
     getEmoji() {

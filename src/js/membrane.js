@@ -18,7 +18,11 @@ function membrane_modelAssetToHTML(modelAsset) {
 
 function membrane_modelAssetsToHTML(modelAssets) {
     let html = '';
+    let colorId = 0;
     for (modelAsset of modelAssets) {
+        if (colorId >= colorRange.length)
+            colorId = 0;
+        modelAsset.colorId = colorId++;
         html += membrane_modelAssetToHTML(modelAsset);
     };
     return html;
