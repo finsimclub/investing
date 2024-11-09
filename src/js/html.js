@@ -1,7 +1,7 @@
 const htmlAssetHeader = 
 `<form class="asset" style="background-color: $BACKGROUND-COLOR$">
     <div style="overflow: hidden; padding: 10px;">
-        <div style="height: 20px; width: 20px; border-radius: 10px; float: right; background-color: $BACKGROUNDCOLOR$"></div>
+        <div class="card-chart-color" style="background-color: $BACKGROUNDCOLOR$"></div>
         <div style="float: left; padding: 10px;">
             <label for="instrument">Financial Instrument</label><br />
             <select name="instrument">

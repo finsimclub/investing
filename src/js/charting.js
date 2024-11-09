@@ -138,7 +138,15 @@ function charting_buildFromModelAssets(modelAssets) {
         let chartingDataSet = JSON.parse(JSON.stringify(stackedChartingDataSet));
         chartingDataSet.label = modelAsset.displayName;
         chartingDataSet.data = modelAsset.displayData;
-        chartingDataSet.backgroundColor = colorRange[modelAsset.colorId];       
+        if (highlightDisplayName != null) {
+            if (highlightDisplayName == modelAsset.displayName)
+                chartingDataSet.backgroundColor = colorRange[modelAsset.colorId];
+            else
+                chartingDataSet.backgroundColor = 'whitesmoke'; 
+        }
+        else {
+          chartingDataSet.backgroundColor = colorRange[modelAsset.colorId];       
+        }
         chartingData.datasets.push(chartingDataSet);
     }
 

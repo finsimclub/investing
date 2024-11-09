@@ -152,7 +152,9 @@
             var containerElement = document.getElementById('container');
             var assetElement = document.getElementById('asset');
             var assetsContainerElement = document.getElementById('assets');
-            var totalElement = document.getElementById('total');            
+            var totalElement = document.getElementById('total');
+            
+            var highlightDisplayName = null;
         </script>
         <script>
             <!-- these are initial setup functions -->
@@ -267,12 +269,68 @@
                 });
             }
 
+            function connectDocumentClick() {
+                document.addEventListener('click', function (ev) {
+                    console.log('document.click ' + ev.srcElement);
+
+                    if (highlightDisplayName != null && ev.srcElement.parentElement != null) {
+                        let displayNameElement = ev.srcElement.parentElement.querySelector('[name="displayName"]');
+                        if (displayNameElement != null) {
+                            let displayNameTest = displayNameElement.value;
+                            if (displayNameTest != highlightDisplayName) {
+                                let selectedCardChartElement = document.querySelector('.selected-card-chart');
+                                if (selectedCardChartElement != null) {
+                                    selectedCardChartElement.classList.remove('selected-card-chart');
+                                }
+                                highlightDisplayName = null;
+                                calculate();                                
+                            }
+                        }
+                    }
+                });
+            }
+
             buildInstrumentOptions();
             initiateStartDate();            
             connectAssetSelect();
             connectAssetsContainerSelects();
             connectCreateAsset();
             connectRemoveAsset();
+            connectDocumentClick();
+        </script>
+        <script>
+            <!-- Mouse Handlers -->
+
+            function clearMouseEvents() {
+                let cardChartColors = assetsContainerElement.querySelectorAll('.card-chart-color');
+                for (let ii = 0; ii < cardChartColors.length; ii++) {
+                    cardChartColors[ii].removeEventListener('click', handleMouseEvents);
+                }
+            }
+
+            function attachMouseEvents() {
+                let cardChartColors = assetsContainerElement.querySelectorAll('.card-chart-color');
+                for (let ii = 0; ii < cardChartColors.length; ii++) {
+                    cardChartColors[ii].addEventListener('click', handleMouseEvents);
+                }
+            }
+
+            function handleMouseEvents(ev) {
+                console.log('element.click ' + ev.srcElement);
+
+                // clear previous
+                let selectedCardChartElement = document.querySelector('.selected-card-chart');
+                if (selectedCardChartElement != null) {
+                    selectedCardChartElement.classList.remove('selected-card-chart');
+                }
+
+                highlightElement = ev.srcElement;
+                highlightElement.classList.add('selected-card-chart');
+                highlightDisplayName = ev.srcElement.parentElement.querySelector('input[name="displayName"]').value;
+
+                calculate();
+            }
+
         </script>
         <script>
             <!-- charting -->
@@ -280,12 +338,30 @@
             const ctx = document.getElementById("chartCanvas");
             var activeChart = null;
 
+            function ensureHighlightDisplayName() {
+                if (highlightDisplayName != null) {
+                    let displayNameElement = assetsContainerElement.querySelector('input[value="' + highlightDisplayName + '"]');
+                    if (displayNameElement != null) {
+                        displayNameElement.parentElement.parentElement.children[0].classList.add('selected-card-chart');
+                    }
+                }
+            }
+
             function calculate() {
                 let modelAssets = membrane_htmlElementsToAssetModels();
                 chronometer_applyMonths(modelAssets);
 
+                // unhook mouse events
+                clearMouseEvents();
+
                 // use the updated modelAssets to produce the updated html
                 assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
+
+                // hook mouse events
+                attachMouseEvents();
+
+                // if there is a highlightDisplayName, make sure it's selected
+                ensureHighlightDisplayName();
 
                 // then build the chart
                 let jsonChartData = charting_buildFromModelAssets(modelAssets)
