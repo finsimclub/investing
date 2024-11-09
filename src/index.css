@@ -70,6 +70,11 @@ input {
     border-radius: 10px;
 }
 
+button {
+    border: 2px solid slategrey;
+    border-radius: 10px;
+}
+
 div > #asset {
     display: inline-block;
     background-color: lightgray;
