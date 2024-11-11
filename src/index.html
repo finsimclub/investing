@@ -36,7 +36,7 @@
             <button onclick="save()">Save</button>&nbsp;<button onclick="load()">Load</button>
         </div>
         <div class="row" id="container">
-                <div class="column-data">
+                <div class="column left">
                     <h3>Enter Financial Data</h3>
                     <form id="asset" class="asset">
                         <div style="overflow: hidden; padding: 10px;">
@@ -85,10 +85,11 @@
                         <input type="submit" value="Create" />
                     </form>
                 </div>                
-                <div class="column-chart">
+                <div class="column middle">
                     <canvas id="chartCanvas"></canvas>
                 </div>
-                <div class="column-data">
+                <div class="column right">
+                    <div style="float: right">
                     <h3>Rolled Up Financial Data</h3>
                     <form id="rollup">
                         <div style="overflow: hidden; padding: 10px;">
@@ -128,10 +129,10 @@
                             </div>
                         </div>
                     </form>
+                    </div>
                 </div>                
         </div>
 
-        <div style="clear: both"></div>
         &nbsp;<br />
         &nbsp;<br />
         &nbsp;<br />
@@ -269,34 +270,12 @@
                 });
             }
 
-            function connectDocumentClick() {
-                document.addEventListener('click', function (ev) {
-                    console.log('document.click ' + ev.srcElement);
-
-                    if (highlightDisplayName != null && ev.srcElement.parentElement != null) {
-                        let displayNameElement = ev.srcElement.parentElement.querySelector('[name="displayName"]');
-                        if (displayNameElement != null) {
-                            let displayNameTest = displayNameElement.value;
-                            if (displayNameTest != highlightDisplayName) {
-                                let selectedCardChartElement = document.querySelector('.selected-card-chart');
-                                if (selectedCardChartElement != null) {
-                                    selectedCardChartElement.classList.remove('selected-card-chart');
-                                }
-                                highlightDisplayName = null;
-                                calculate();                                
-                            }
-                        }
-                    }
-                });
-            }
-
             buildInstrumentOptions();
             initiateStartDate();            
             connectAssetSelect();
             connectAssetsContainerSelects();
             connectCreateAsset();
             connectRemoveAsset();
-            connectDocumentClick();
         </script>
         <script>
             <!-- Mouse Handlers -->
@@ -324,11 +303,22 @@
                     selectedCardChartElement.classList.remove('selected-card-chart');
                 }
 
-                highlightElement = ev.srcElement;
-                highlightElement.classList.add('selected-card-chart');
-                highlightDisplayName = ev.srcElement.parentElement.querySelector('input[name="displayName"]').value;
+                let highlightElement = ev.srcElement;
+                if (highlightDisplayName == null) {                    
+                    highlightElement.classList.add('selected-card-chart');
+                    highlightDisplayName = ev.srcElement.parentElement.querySelector('input[name="displayName"]').value;
+                }
+                else {
+                    let clickedHighlightDisplayName = ev.srcElement.parentElement.querySelector('input[name="displayName"]').value;
+                    if (clickedHighlightDisplayName != highlightDisplayName) {
+                        highlightElement.classList.add('selected-card-chart');
+                        highlightDisplayName = ev.srcElement.parentElement.querySelector('input[name="displayName"]').value;
+                    }
+                    else
+                        highlightDisplayName = null;
+                }
 
-                calculate();
+                updateChart();
             }
 
         </script>
@@ -339,11 +329,32 @@
             var activeChart = null;
 
             function ensureHighlightDisplayName() {
-                if (highlightDisplayName != null) {
+                if (highlightDisplayName == null) {
+                    let selectedCardCharts = assetsContainerElement.querySelectorAll('.selected-card-chart');
+                    if (selectedCardCharts != null) {
+                        for (let ii = 0; ii < selectedCardCharts.length; ii++) {
+                            selectedCardCharts[ii].classList.remove('selected-card-chart');
+                        }
+                    }
+                }
+                else {
                     let displayNameElement = assetsContainerElement.querySelector('input[value="' + highlightDisplayName + '"]');
                     if (displayNameElement != null) {
                         displayNameElement.parentElement.parentElement.children[0].classList.add('selected-card-chart');
                     }
+                }
+            }
+
+            var jsonChartData = null;
+            
+            function updateChart() {
+                for (let ii = 0; ii < jsonChartData.data.datasets.length; ii++) {
+                    let dataSet = jsonChartData.data.datasets[ii];
+                    if (highlightDisplayName == null || dataSet.label == highlightDisplayName)
+                        dataSet.backgroundColor = colorRange[ii];
+                    else
+                        dataSet.backgroundColor = 'whitesmoke';                    
+                    activeChart.update();
                 }
             }
 
@@ -364,15 +375,15 @@
                 ensureHighlightDisplayName();
 
                 // then build the chart
-                let jsonChartData = charting_buildFromModelAssets(modelAssets)
-                innerCalculate(jsonChartData);
+                jsonChartData = charting_buildFromModelAssets(modelAssets)
+                innerCalculate();
             };
 
-            function innerCalculate(jsonData) {              
+            function innerCalculate() {              
                 if (activeChart != null)
                     activeChart.destroy();
-                if (jsonData != null)
-                    activeChart = new Chart(ctx, jsonData);
+                if (jsonChartData != null)
+                    activeChart = new Chart(ctx, jsonChartData);
             }
 
             function save() {
