@@ -102,6 +102,10 @@ div.scrollable-x > .asset {
     width: 300px;
 }
 
+.width-full {
+    width: 100%;
+}
+
 .invisible {
     visibility: hidden;
 }

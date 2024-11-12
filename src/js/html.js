@@ -2,71 +2,72 @@ const htmlAssetHeader =
 `<form class="asset" style="background-color: $BACKGROUND-COLOR$">
     <div style="overflow: hidden; padding: 10px;">
         <div class="card-chart-color" style="background-color: $BACKGROUNDCOLOR$"></div>
-        <div style="float: left; padding: 10px;">
+        <div class="width-full" style="float: left; padding-top: 10px;">
             <label for="instrument">Financial Instrument</label><br />
-            <select name="instrument">
+            <select class="width-full" name="instrument">
                 $INSTRUMENTOPTIONS$
             </select><br />
             <label for="displayName">Familiar Name</label><br />
-            <input type="text" name="displayName" value="$DISPLAYNAME$" placeholder="familiar name" /><br />
+            <input type="text" class="width-full" name="displayName" value="$DISPLAYNAME$" placeholder="familiar name" /><br />
         </div>
         $ASSETPROPERTIES$
     </div>
+    <br />
     <input type="submit" class="remove" value="Remove" />
 </form>`;
 
 const htmlAssetBody = 
-`<div style="float: left; width: 100%; padding: 10px;">
-    <div style="float: left;">
+`<div class="width-full" style="float: left; padding-top: 10px;">
+    <div style="float: left; width: 55%">
         <label for="startDate">Start Date</label><br />
-        <input type="month" name="startDate" value="$STARTDATE$" required />
+        <input type="month" class="width-full" name="startDate" value="$STARTDATE$" required />
     </div>
-    <div style="float: left">
+    <div style="float: left; width: 45%">
         <label for="startValue">Start Value</label><br />
-        <input type="number" style="width: 100px" name="startValue" value="$STARTVALUE$" step="0.01" placeholder="dollar amount at start date" required />
+        <input type="number" class="width-full" name="startValue" value="$STARTVALUE$" step="0.01" placeholder="dollar amount at start date" required />
     </div>
 </div>
-<div style="float: left; width: 100%; padding: 10px;">
-    <div style="float: left">
+<div class="width-full" style="float: left; padding-top: 10px;">
+    <div style="float: left; width: 55%">
         <label for="finishDate">Finish Date</label><br />
-        <input type="month" name="finishDate" value="$FINISHDATE$" required />
+        <input type="month" class="width-full" name="finishDate" value="$FINISHDATE$" required />
     </div>
-    <div style="float: left">
+    <div style="float: left; width: 45%">
         <label for="finishValue">Finish Value</label><br />
-        <input type="number" style="width: 100px" name="finishValue" value="$FINISHVALUE$" step="0.01" placeholder="computed" readonly />
+        <input type="number" class="width-full" name="finishValue" value="$FINISHVALUE$" step="0.01" placeholder="computed" readonly />
     </div>
 </div>
-<div style="float: left; width: 100%; padding: 10px">    
+<div class="width-full" style="float: left; padding-top: 10px">    
     <label for="annualReturnRate">Annual Return %</label><br />
-    <input type="number" name="annualReturnRate" step="0.01" value="$ANNUALRETURNRATE$" placeholder="annual return rate" required /><br />
+    <input type="number" style="width: 125px" name="annualReturnRate" step="0.01" value="$ANNUALRETURNRATE$" placeholder="annual return rate" required /><br />
     <label for="accumulatedValue">Accumulated Value</label><br />
-    <input type="number" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" /><br />
+    <input type="number" style="width: 125px" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" /><br />
 </div>
-<div style="float: left; width: 100%; padding: 10px">
+<div class="width-full" style="float: left; padding-top: 10px">
     $INVISIBLEPLACEHOLDER$
     $MONTHSREMAININGDISPLAY$
     $FUNDINGSOURCEDISPLAY$
 </div>`;
 
 const htmlInvisibleDisplay = `<label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
-    <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />`;
+    <input class="invisible" type="number" style=""width: 125px" name="invisiblePlaceholder" placeholder="invisible" />`;
 
 const htmlInvisibleHidden = `<label class="invisible" style="display: none" for="invisiblePlaceholder">Invisible</label><br class="invisible" style="display: none" />
-    <input class="invisible" type="number" style="width: 100px; display: none" name="invisiblePlaceholder" placeholder="invisible" />`;
+    <input class="invisible" type="number" style="display: none; width: 125px" name="invisiblePlaceholder" placeholder="invisible" />`;
 
 const htmlMonthsRemainingDisplay = `<label class="hidable" for="monthsRemaining">Months Remaining</label><br class="hidable" />
-    <input class="hidable" type="number" style="width: 100px" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
+    <input class="hidable" type="number" style="width: 125px" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
 
 const htmlMonthsRemainingHidden = `<label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
-    <input class="hidable" type="number" style="width: 100px; display: none" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
+    <input class="hidable" type="number" style="display: none; width: 125px" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
 
-const htmlFundingSourceDisplay = `<label class="hidable" for="fundingSource">Pay With</label><br class="hidable" />
-    <select class="hidable" name="fundingSource">
+const htmlFundingSourceDisplay = `<label class="hidable" for="fundingSource">Apply to Card</label><br class="hidable" />
+    <select class="hidable width-full" name="fundingSource">
         $FUNDINGSOURCEOPTIONS$
     </select>`;
 
-const htmlFundingSourceHidden = `<label class="hidable" for="fundingSource" style="display: none">Pay With</label><br class="hidable" style="display: none" />
-    <select class="hidable" style="display: none" name="fundingSource">
+const htmlFundingSourceHidden = `<label class="hidable" for="fundingSource" style="display: none">Apply to Card</label><br class="hidable" style="display: none" />
+    <select class="hidable width-full" style="display: none" name="fundingSource">
         $FUNDINGSOURCEOPTIONS$
     </select>`;
 

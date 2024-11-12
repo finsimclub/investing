@@ -36,105 +36,101 @@
             <button onclick="save()">Save</button>&nbsp;<button onclick="load()">Load</button>
         </div>
         <div class="row" id="container">
-                <div class="column left">
-                    <h3>Enter Financial Data</h3>
-                    <form id="asset" class="asset">
-                        <div style="overflow: hidden; padding: 10px;">
-                            <div style="float: left; padding: 10px;">
-                                <label for="instrument">Financial Instrument</label><br />
-                                <select style="width: 100%" name="instrument">                                
-                                </select><br />
-                                <label for="displayName">Familiar Name</label>
-                                <input type="text" style="width: 100%" name="displayName" placeholder="familiar name" /><br />
+            <div class="column left">
+                <h3>Enter Financial Data</h3>
+                <form id="asset" class="asset">
+                    <div style="overflow: hidden; padding: 10px">
+                        <div class="width-full" style="float: left">
+                            <label for="instrument">Financial Instrument</label><br />
+                            <select class="width-full" name="instrument">                                
+                            </select><br />
+                            <label for="displayName">Familiar Name</label>
+                            <input type="text" class="width-full" name="displayName" placeholder="familiar name" /><br />
+                        </div>
+                        <div class="width-full" style="float: left; padding-top: 10px">
+                            <div style="float: left; width: 55%">
+                                <label for="startDate">Start Date</label><br />
+                                <input type="month" class="width-full" name="startDate" required />
                             </div>
-                            <div style="float: left; width: 100%; padding: 10px;">
-                                <div style="float: left;">
-                                    <label for="startDate">Start Date</label><br />
-                                    <input type="month" name="startDate" required />
-                                </div>
-                                <div style="float: left">
-                                    <label for="startValue">Start Value</label><br />
-                                    <input type="number" style="width: 100px" name="startValue" placeholder="dollar amount at start date" required />
-                                </div>
-                            </div>
-                            <div style="float: left; width: 100%; padding: 10px;">
-                                <div style="float: left">
-                                    <label for="finishDate">Finish Date</label><br />
-                                    <input type="month" name="finishDate" required />
-                                </div>
-                                <div style="float: left">
-                                    <label for="finishValue">Finish Value</label><br />
-                                    <input type="number" style="width: 100px" name="finishValue" placeholder="computed" disabled />
-                                </div>
-                            </div>
-                            <div style="float: left; width: 100%; padding: 10px">
-                                <label for="annualReturnRate">Annual Return %</label><br />
-                                <input type="number" name="annualReturnRate" step="0.01" placeholder="annual return rate" required /><br />                                
-                            </div>
-                            <div style="float: left; width: 100%; padding: 10px">
-                                <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
-                                <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
-                                <label class="hidable" style="display: none;" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none;" />
-                                <input class="hidable" type="number" style="display: none; width: 100px" name="monthsRemaining" placeholder="months" />
-                                <label class="hidable" style="display: none;" for="fundingSource">Pay With</label><br class="hidable" style="display: none;" />
-                                <select class="hidable" style="display: none;" name="fundingSource">
-                                    <option value="none">None</option>
-                                </select>
+                            <div style="float: left; width: 45%">
+                                <label for="startValue">Start Value</label><br />
+                                <input type="number" class="width-full" name="startValue" placeholder="dollar amount" required />
                             </div>
                         </div>
-                        <input type="submit" value="Create" />
-                    </form>
-                </div>                
-                <div class="column middle">
-                    <canvas id="chartCanvas"></canvas>
-                </div>
-                <div class="column right">
-                    <div style="float: right">
-                    <h3>Rolled Up Financial Data</h3>
-                    <form id="rollup">
-                        <div style="overflow: hidden; padding: 10px;">
-                            <div style="float: left; width: 100%; padding: 10px;">
-                                <label for="instrument">Financial Instrument</label><br />
-                                <input type="text" name="instrument" value="All Instruments"/><br />
-                                <label for="displayName">Familiar Name</label><br />
-                                <input type="text" name="displayName" placeholder="familiar name" />
+                        <div class="width-full" style="float: left; padding-top: 10px">
+                            <div style="float: left; width: 55%">
+                                <label for="finishDate">Finish Date</label><br />
+                                <input type="month" class="width-full" name="finishDate" required />
                             </div>
-                            <div style="float: left; width: 100%; padding: 10px;">
-                                <div style="float: left">
-                                    <label for="startDate">Start Date</label><br />
-                                    <input type="month" id="summaryStartDate" name="startDate" readonly />
-                                </div>
-                                <div style="float: left">
-                                    <label for="startValue">Start Value</label><br />
-                                    <input type="number" style="width: 100px" id="summaryStartValue" name="startValue" step="0.01" placeholder="computed" readonly />
-                                </div>
-                            </div>
-                            <div style="float: left; width: 100%; padding: 10px">
-                                <div style="float: left">
-                                    <label for="finishDate">Finish Date</label><br />
-                                    <input type="month" id="summaryFinishDate" name="finishDate" readonly />
-                                </div>
-                                <div style="float: left">
-                                    <label for="finishValue">Finish Value</label><br />
-                                    <input type="number" style="width: 100px" id="summaryFinishValue" name="finishValue" step="0.01" placeholder="computed" readonly />                                
-                                </div>
-                            </div>
-                            <div style="float: left; width: 100%; padding: 10px">
-                                <label for="monthsRemaining">Accrued Months</label><br />
-                                <input type="number" style="width: 100px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly /><br />
-                                <label for="accumulatedValue">Accumulated Value</label><br />                                
-                                <input type="number" id="summaryAccumulatedValue" name="accumulatedValue" step="0.01" placeholder="accumulated value" readonly /><br />
-                                <label for="annualReturnRate">Annual Return %</label><br />
-                                <input type="number" id="summaryAnnualReturnRate" name="annualReturnRate" step="0.01" placeholder="annual return rate" readonly /><br />
+                            <div style="float: left; width: 45%">
+                                <label for="finishValue">Finish Value</label><br />
+                                <input type="number" class="width-full" name="finishValue" placeholder="computed" disabled />
                             </div>
                         </div>
-                    </form>
+                        <div class="width-full" style="float: left; padding-top: 10px">
+                            <label for="annualReturnRate">Annual Return %</label><br />
+                            <input type="number" style="width: 125px" name="annualReturnRate" step="0.01" placeholder="in decimal" required /><br />                                
+                        </div>
+                        <div class="width-full" style="float: left; padding-bottom: 10px;">
+                            <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
+                            <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
+                            <label class="hidable" style="display: none;" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none;" />
+                            <input class="hidable" type="number" style="display: none; width: 100px" name="monthsRemaining" placeholder="months" />
+                            <label class="hidable" style="display: none;" for="fundingSource">Apply to Card</label><br class="hidable" style="display: none;" />
+                            <select class="hidable width-full" style="display: none;" name="fundingSource">
+                                <option value="none">None</option>
+                            </select>
+                        </div>
                     </div>
-                </div>                
+                    <input type="submit" value="Create" />
+                </form>
+            </div>                
+            <div class="column middle">
+                <canvas id="chartCanvas"></canvas>
+            </div>
+            <div class="column right">            
+                <h3>Rolled Up Financial Data</h3>
+                <form id="rollup">
+                    <div style="overflow: hidden; padding: 10px;">
+                        <div class="width-full" style="float: left;">
+                            <label for="instrument">Financial Instrument</label><br />
+                            <input type="text" class="width-full" name="instrument" value="All Instruments"/><br />
+                            <label for="displayName">Familiar Name</label><br />
+                            <input type="text" class="width-full" name="displayName" placeholder="familiar name" />
+                        </div>
+                        <div class="width-full" style="float: left; padding-top: 10px;">
+                            <div style="float: left; width: 55%">
+                                <label for="startDate">Start Date</label><br />
+                                <input type="month" class="width-full" id="summaryStartDate" name="startDate" readonly />
+                            </div>
+                            <div style="float: left; width: 45%">
+                                <label for="startValue">Start Value</label><br />
+                                <input type="number" class="width-full" id="summaryStartValue" name="startValue" step="0.01" placeholder="computed" readonly />
+                            </div>
+                        </div>
+                        <div class="width-full" style="float: left; padding-top: 10px">
+                            <div style="float: left; width: 55%">
+                                <label for="finishDate">Finish Date</label><br />
+                                <input type="month" class="width-full" id="summaryFinishDate" name="finishDate" readonly />
+                            </div>
+                            <div style="float: left; width: 45%">
+                                <label for="finishValue">Finish Value</label><br />
+                                <input type="number" class="width-full" id="summaryFinishValue" name="finishValue" step="0.01" placeholder="computed" readonly />                                
+                            </div>
+                        </div>
+                        <div class="width-full" style="float: left; padding-top: 10px">
+                            <label for="monthsRemaining">Accrued Months</label><br />
+                            <input type="number" style="width: 100px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly /><br />
+                            <label for="accumulatedValue">Accumulated Value</label><br />                                
+                            <input type="number" id="summaryAccumulatedValue" name="accumulatedValue" step="0.01" placeholder="accumulated value" readonly /><br />
+                            <label for="annualReturnRate">Annual Return %</label><br />
+                            <input type="number" id="summaryAnnualReturnRate" name="annualReturnRate" step="0.01" placeholder="annual return rate" readonly /><br />
+                        </div>
+                    </div>
+                </form>                
+            </div>                
         </div>
 
-        &nbsp;<br />
-        &nbsp;<br />
         &nbsp;<br />
         <div style="text-align: center; clear: both">
             <button onclick="calculate()">Recalculate</button>
