@@ -82,12 +82,19 @@ class MonthsSpan {
 
 class Currency {
     constructor(amount) {
-        this.amount = amount;
+        if (amount)
+            this.amount = amount;
+        else
+            this.amount = 0.0;
     }
 
     static parse(currency) {
-        var currency = currency.replace("$", "");
-        return new Currency(parseFloat(currency));
+        if (currency) {
+            var currency = currency.replace("$", "");
+            return new Currency(parseFloat(currency));
+        }
+        else
+            return new Currency(0.0);
     }
 
     zero() {
@@ -95,12 +102,14 @@ class Currency {
     }
 
     add(currency) {
-        this.amount += currency.amount;
+        if (currency && currency.amount)
+            this.amount += currency.amount;
         return this;
     }
 
     subtract(currency) {
-        this.amount -= currency.amount;
+        if (currency && currency.amount)
+            this.amount -= currency.amount;
         return this;
     }
 

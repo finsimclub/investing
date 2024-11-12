@@ -28,6 +28,27 @@ function membrane_modelAssetsToHTML(modelAssets) {
     return html;
 }
 
+/* This is required in order to turn data objects into object instances-- like Month-Year data to DateInt objects */
+function membrane_jsonDataToModelAssets(jsonData) {
+    let rawModelAssets = JSON.parse(jsonData);
+    let result = [];
+    for (let ii = 0; ii < rawModelAssets.length; ii++) {
+        result.push(membrane_rawModelDataToModelAsset(rawModelAssets[ii]));
+    }
+    return result;
+}
+
+function membrane_rawModelDataToModelAsset(rawModelData) {
+    let startDateInt = new DateInt((rawModelData.startDateInt.year * 100) + rawModelData.startDateInt.month);
+    let startCurrency = new Currency(rawModelData.startCurrency.amount);
+    let finishDateInt = new DateInt((rawModelData.finishDateInt.year * 100) + rawModelData.finishDateInt.month);
+    let finishCurrency = new Currency(rawModelData.finishCurrency.amount);
+    let arr = new ARR(rawModelData.annualReturnRate.annualReturnRate);
+    let modelAsset = new ModelAsset(rawModelData.instrument, rawModelData.displayName, startDateInt, startCurrency, finishDateInt, rawModelData.monthsRemaining, finishCurrency, arr);
+    modelAsset.fundingSource = rawModelData.fundingSource;
+    return modelAsset;
+}
+
 function membrane_htmlElementToAssetModel (assetElement) {
     const inputElements = assetElement.querySelectorAll('input, select');
     return ModelAsset.parseHTML(inputElements);

@@ -73,9 +73,9 @@
                         </div>
                         <div class="width-full" style="float: left; padding-bottom: 10px;">
                             <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
-                            <input class="invisible" type="number" style="width: 100px;" name="invisiblePlaceholder" placeholder="invisible" />
+                            <input class="invisible" type="number" style="width: 125px;" name="invisiblePlaceholder" placeholder="invisible" />
                             <label class="hidable" style="display: none;" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none;" />
-                            <input class="hidable" type="number" style="display: none; width: 100px" name="monthsRemaining" placeholder="months" />
+                            <input class="hidable" type="number" style="display: none; width: 125px" name="monthsRemaining" placeholder="months" />
                             <label class="hidable" style="display: none;" for="fundingSource">Apply to Card</label><br class="hidable" style="display: none;" />
                             <select class="hidable width-full" style="display: none;" name="fundingSource">
                                 <option value="none">None</option>
@@ -121,7 +121,7 @@
                             </div>
                             <div class="width-full" style="float: left; padding-top: 10px">
                                 <label for="monthsRemaining">Accrued Months</label><br />
-                                <input type="number" style="width: 100px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly /><br />
+                                <input type="number" style="width: 125px" id="summaryAccruedMonths" name="monthsRemaining" placeholder="total months accrued" readonly /><br />
                                 <label for="accumulatedValue">Accumulated Value</label><br />                                
                                 <input type="number" id="summaryAccumulatedValue" name="accumulatedValue" step="0.01" placeholder="accumulated value" readonly /><br />
                                 <label for="annualReturnRate">Annual Return %</label><br />
@@ -163,11 +163,16 @@
                 selectElement.innerHTML = html_buildInstrumentOptions(null)
             }
 
-            function initiateStartDate() {
-                console.log('initiateStartDate');
+            function initiateActiveData() {
+                console.log('initiateActiveData');
+
+                // TODO - get this from a global options setting
                 let startDateElement = assetElement.querySelector('[name="startDate"]');
                 let di = DateInt.parse(new Date().toISOString());
                 startDateElement.value = di.toHTML();
+
+                // Get the last working data set
+                loadWorkingData();
             }
 
             function hideElementsWithScope(scopeElement) {
@@ -249,6 +254,8 @@
                         displayElementSet(fundingElement, 6);
                     };
                     
+                    saveWorkingData();
+
                     calculate();
                 });                                            
             }
@@ -263,17 +270,13 @@
                         while (removeContainerNode.parentNode.id != 'assets')
                             removeContainerNode = removeContainerNode.parentNode;
                         assetsContainerElement.removeChild(removeContainerNode);
+
+                        saveWorkingData();
+
                         calculate();
                     }
                 });
             }
-
-            buildInstrumentOptions();
-            initiateStartDate();            
-            connectAssetSelect();
-            connectAssetsContainerSelects();
-            connectCreateAsset();
-            connectRemoveAsset();
         </script>
         <script>
             <!-- Mouse Handlers -->
@@ -385,15 +388,41 @@
             }
 
             function save() {
-                let assetsContainerElementInnerHTML = assetsContainerElement.innerHTML;
-                localStorage.setItem('assetsContainerElementInnerHTML', assetsContainerElementInnerHTML);
+                let modelAssets = membrane_htmlElementsToAssetModels();                
+                localStorage.setItem('savedModelAssets', JSON.stringify(modelAssets));
+            }
+
+            function saveWorkingData() {
+                let modelAssets = membrane_htmlElementsToAssetModels();                
+                localStorage.setItem('workingModelAssets', JSON.stringify(modelAssets));
             }
 
             function load() {
-                let assetsContainerElementInnerHTML = localStorage.getItem('assetsContainerElementInnerHTML');
-                assetsContainerElement.innerHTML = assetsContainerElementInnerHTML;
-                calculate();
+                let jsonData = localStorage.getItem('savedModelAssets');
+                if (jsonData != null && jsonData.length > 0) {
+                    let modelAssets = membrane_jsonDataToModelAssets(jsonData);                    
+                    assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
+                    calculate();
+                }
             }
+
+            function loadWorkingData() {
+                let jsonData = localStorage.getItem('workingModelAssets');
+                if (jsonData != null && jsonData.length > 0) {
+                    let modelAssets = membrane_jsonDataToModelAssets(jsonData);                    
+                    assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
+                    calculate();
+                }
+            }
+        </script>
+        <script>
+            // initialization routines
+            buildInstrumentOptions();
+            initiateActiveData();            
+            connectAssetSelect();
+            connectAssetsContainerSelects();
+            connectCreateAsset();
+            connectRemoveAsset();
         </script>
     </body>
 </html>
