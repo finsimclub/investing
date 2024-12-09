@@ -254,18 +254,16 @@ function isDebt(value) {
     return value == sInstrumentNames[sInstrumentsIDs.debt];
 }
 
-function isMonthlyExpenses(value) {
-    return value == sInstrumentNames[sInstrumentsIDs.monthlyExpenses];
+function isMonthlyExpense(value) {
+    return value == sInstrumentNames[sInstrumentsIDs.monthlyExpense];
 }
 
 function isMonthlyIncome(value) {
-    return value == sInstrumentNames[sInstrumentsIDs.income];
+    return value == sInstrumentNames[sInstrumentsIDs.monthlyIncome];
 }
 
 function isFundableAsset(value) {
-    if (value == sInstrumentNames[sInstrumentsIDs.income])
-        return true;
-    else if (value == sInstrumentNames[sInstrumentsIDs.cash])
+    if (value == sInstrumentNames[sInstrumentsIDs.cash])
         return true;
     else if (value == sInstrumentNames[sInstrumentsIDs.bank])
         return true;

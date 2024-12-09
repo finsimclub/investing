@@ -94,8 +94,11 @@ function html_buildInstrumentOptions(instrument) {
     return html;
 }
 
-function html_buildFundingSourceOptions(fundingSource) {
-    let modelAssets = membrane_htmlElementsToAssetModels();
+function html_buildFundingSourceOptions(modelAssets, fundingSource) {
+    if (modelAssets == null) {
+        console.log('html_buildFundingSourceOptions - modelAssets is null; querying html assets');
+        modelAssets = membrane_htmlElementsToAssetModels();    
+    }
     let html = '<option value="none">None</option>';
     for (const modelAsset of modelAssets) {
         if (isFundableAsset(modelAsset.instrument)) {
@@ -120,7 +123,7 @@ function html_buildAssetHeader(modelAsset) {
 //    return html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(fundingSource));
 //}
 
-function html_buildRemovableAssetElement(modelAsset) {
+function html_buildRemovableAssetElement(modelAssets, modelAsset) {
     let html = (html_buildAssetHeader(modelAsset)).slice();
     html = html.replace('$ASSETPROPERTIES$', htmlAssetBody); // html_buildAssetBody(modelAsset.fundingSource));
     html = html.replace('$DISPLAYNAME$', modelAsset.displayName);
@@ -140,13 +143,13 @@ function html_buildRemovableAssetElement(modelAsset) {
     else
         html = html.replace('$ACCUMULATEDVALUE$', '0.0');   
 
-    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument) || isMonthlyExpenses(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
+    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument) || isMonthlyExpense(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
         html = html.replace('$INVISIBLEPLACEHOLDER$', htmlInvisibleHidden);
         if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument)) {
             html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingDisplay);
             html = html.replace("$FUNDINGSOURCEDISPLAY$", htmlFundingSourceHidden);      
         }
-        else if (isMonthlyExpenses(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
+        else if (isMonthlyExpense(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
             html = html.replace('$FUNDINGSOURCEDISPLAY$', htmlFundingSourceDisplay);
             html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingHidden);
         }
@@ -161,7 +164,7 @@ function html_buildRemovableAssetElement(modelAsset) {
     }
 
     html = html.replace('$MONTHSREMAINING$', modelAsset.monthsRemaining);  
-    html = html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(modelAsset.fundingSource));
+    html = html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(modelAssets, modelAsset.fundingSource));
 
     if (modelAsset.accumulatedCurrency.amount > 0)
         html = html.replace('$BACKGROUND-COLOR$', positiveBackgroundColor + ';');

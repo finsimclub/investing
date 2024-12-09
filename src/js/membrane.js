@@ -11,8 +11,8 @@ function membrane_jsonObjectsToModelAssets(jsonObjects) {
     return modelAssets;
 }
 
-function membrane_modelAssetToHTML(modelAsset) {
-    let html = html_buildRemovableAssetElement(modelAsset);
+function membrane_modelAssetToHTML(modelAssets, modelAsset) {
+    let html = html_buildRemovableAssetElement(modelAssets, modelAsset);
     return html;
 }
 
@@ -23,7 +23,7 @@ function membrane_modelAssetsToHTML(modelAssets) {
         if (colorId >= colorRange.length)
             colorId = 0;
         modelAsset.colorId = colorId++;
-        html += membrane_modelAssetToHTML(modelAsset);
+        html += membrane_modelAssetToHTML(modelAssets, modelAsset);
     };
     return html;
 }

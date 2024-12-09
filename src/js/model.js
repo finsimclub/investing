@@ -9,14 +9,14 @@ const sFinishValue = 'finishValue';
 const sAnnualReturnRate = 'annualReturnRate';
 const sFundingSource = 'fundingSource';
 
-const sInstrumentNames = ['home', 'mortgage', 'debt', 'monthlyExpenses', 'income', 'taxableEquity', 'taxDeferredEquity', 'taxFreeEquity', 'usBond', 'corpBond', 'bank', 'cash'];
-const sIntrumentDisplayNames = ['🏡 House', '💸🏡 Mortgage', '💳 Debt', '💸💰 Monthly Expenses', '💲💰 Income', '🧾📈 Taxable Account', '⏳📈 Tax Deferred Account', '📈 Tax Free Account', '🏛️ US Treasury', '🏛️ Corporate Bond', '🏦 Savings', '💰 Cash'];
+const sInstrumentNames = ['home', 'mortgage', 'debt', 'monthlyExpense', 'monthlyIncome', 'taxableEquity', 'taxDeferredEquity', 'taxFreeEquity', 'usBond', 'corpBond', 'bank', 'cash'];
+const sIntrumentDisplayNames = ['🏡 House', '💸🏡 Mortgage', '💳 Debt', '💸💰 Monthly Expense', '💲💰 Monthly Income', '🧾📈 Taxable Account', '⏳📈 Tax Deferred Account', '📈 Tax Free Account', '🏛️ US Treasury', '🏛️ Corporate Bond', '🏦 Savings', '💰 Cash'];
 const sInstrumentsIDs = Object.freeze({
     home: 0,
     mortgage: 1,
     debt: 2,
-    monthlyExpenses: 3,
-    income: 4,
+    monthlyExpense: 3,
+    monthlyIncome: 4,
     taxableEquity: 5,
     taxDeferredEquity: 6,
     taxFreeEquity: 7,
@@ -40,7 +40,8 @@ class ModelAsset {
             this.monthsRemaining = 0;
         this.annualReturnRate = annualReturnRate;
         this.accumulatedCurrency = new Currency(0.0);
-        this.monthlyData = [];
+        this.monthlyDelta = [];
+        this.monthlyTotal = [];
         this.fundingSource = null;
         this.colorId = 0;
     }
@@ -120,7 +121,8 @@ class ModelAsset {
     }
 
     startMonth() {
-        this.monthlyData = [];
+        this.monthlyDelta = [];
+        this.monthlyTotal = [];
         this.monthsRemainingDynamic = this.monthsRemaining;
         this.finishCurrency.zero();
 
@@ -181,11 +183,11 @@ class ModelAsset {
 
     }
 
-    applyMonth_expensesOrIncome(isInMonth) {
+    applyMonth_expenseOrIncome(isInMonth) {
 
         // the customization here will be which buckets to debit from
 
-        if (isMonthlyExpenses(this.instrument) && this.startCurrency.amount > 0) {
+        if (isMonthlyExpense(this.instrument) && this.startCurrency.amount > 0) {
             this.startCurrency.amount *= -1;
             this.finishCurrency.amount *= -1;
         }
@@ -224,40 +226,59 @@ class ModelAsset {
         if (currentDateInt.toInt() == this.startDateInt.toInt())
             this.finishCurrency = new Currency(this.startCurrency.amount);
 
+        let preFinishCurrency = null;
+        if (isInMonth)
+            preFinishCurrency = new Currency(this.finishCurrency.amount);
+
         if (isMortgage(this.instrument)) {
             this.applyMonth_mortgage(isInMonth);
         }
         else if (isDebt(this.instrument)) {
             this.applyMonth_debt(isInMonth);
         }
-        else if (isMonthlyExpenses(this.instrument) || isMonthlyIncome(this.instrument)) {
-            this.applyMonth_expensesOrIncome(isInMonth);
+        else if (isMonthlyExpense(this.instrument) || isMonthlyIncome(this.instrument)) {
+            this.applyMonth_expenseOrIncome(isInMonth);
         }
         else {
             this.applyMonth_common(isInMonth);
         }
 
         if (isInMonth) {
-            this.monthlyData.push(this.finishCurrency.toCurrency());
+            if (isMonthlyExpense(this.instrument) || isMonthlyIncome(this.instrument)) {
+                this.monthlyDelta.push(this.finishCurrency.toCurrency())    
+            }
+            else {
+                let postFinishCurrency = new Currency(this.finishCurrency.amount);
+                this.monthlyDelta.push(postFinishCurrency.subtract(preFinishCurrency).toCurrency())
+            }
+            this.monthlyTotal.push(this.finishCurrency.toCurrency());
         }
         else {
-            this.monthlyData.push('$0.00');
+            this.monthlyDelta.push('$0.00');
+            this.monthlyTotal.push('$0.00');
         }
 
         return isInMonth;
     }
 
-    monthlyDataToDisplayData(monthsSpan) {
-        this.displayData = [];
-        for (let ii = monthsSpan.offsetMonths; ii < this.monthlyData.length; ii += monthsSpan.combineMonths) {
-            this.displayData.push(this.monthlyData[ii]);
+    monthlyAssetDataToDisplayAssetData(monthsSpan) {
+        this.displayAssetData = [];
+        for (let ii = monthsSpan.offsetMonths; ii < this.monthlyTotal.length; ii += monthsSpan.combineMonths) {
+            this.displayAssetData.push(this.monthlyTotal[ii]);
+        }
+    }
+
+    monthlyFlowDataToDisplayFlowData(monthsSpan) {
+        this.displayFlowData = [];
+        for (let ii = monthsSpan.offsetMonths; ii < this.monthlyDelta.length; ii += monthsSpan.combineMonths) {
+            this.displayFlowData.push(this.monthlyDelta[ii]);
         }
     }
 
     getFinishCurrencyForRollup() {
         if (isMortgage(this.instrument) || isDebt(this.instrument))
             return this.accumulatedCurrency;
-        else if (isMonthlyExpenses(this.instrument) || isMonthlyIncome(this.instrument))
+        else if (isMonthlyExpense(this.instrument) || isMonthlyIncome(this.instrument))
             return this.accumulatedCurrency;
         else
             return this.finishCurrency;
@@ -288,9 +309,9 @@ class ModelAsset {
             return '🏛️';
         else if (this.instrument == 'cash')
             return '💰';
-        else if (this.instrument == 'income')
+        else if (this.instrument == 'monthlyIncome')
             return '💲💰';
-        else if (this.instrument == 'monthlyExpenses')
+        else if (this.instrument == 'monthlyExpense')
             return '💸💰';
     }
 }

@@ -88,7 +88,22 @@
                 </form>
             </div>                
             <div class="column middle">
-                <canvas id="chartCanvas"></canvas>
+                <div class="tabs">
+                    <div class="tab active" id="tab1" onclick="tab1_click()">
+                        <blockquote>Asset View</blockquote>
+                    </div>
+                    <div class="tab" id="tab2" onclick="tab2_click()">
+                        <blockquote>Cash Flow View</blockquote>
+                    </div>
+                </div>
+
+                <div style="width: 100%">
+                    <canvas id="chartAssetCanvas"></canvas>
+                </div>
+                <div style="width: 100%; display: none">
+                    <canvas id="chartFlowCanvas"></canvas>
+                </div>
+                
             </div>
             <div class="column right">
                 <div style="float: right">            
@@ -155,6 +170,11 @@
             var assetsContainerElement = document.getElementById('assets');
             var totalElement = document.getElementById('total');
             
+            var chartAssetCanvas = document.getElementById('chartAssetCanvas');
+            var chartFlowCanvas = document.getElementById('chartFlowCanvas');
+            var activeAssetCanvas = null;
+            var activeFlowCanvas = null;
+
             var highlightDisplayName = null;
         </script>
         <script>
@@ -201,7 +221,7 @@
                         displayElementSet(monthsElement, 3);
                     }
                     // TODO - a better way to hide labels than child position
-                    else if (isMonthlyExpenses(event.target.value) || isMonthlyIncome(event.target.value)) {
+                    else if (isMonthlyExpense(event.target.value) || isMonthlyIncome(event.target.value)) {
                         displayElementSet(fundingElement, 6);
                     }
                 });
@@ -220,7 +240,7 @@
                             let monthsElement = event.target.parentElement.parentElement.querySelector('[name="monthsRemaining"]');
                             displayElementSet(monthsElement, 3);
                         }
-                        else if (isMonthlyExpenses(event.target.value) || isMonthlyIncome(event.target.value)) {
+                        else if (isMonthlyExpense(event.target.value) || isMonthlyIncome(event.target.value)) {
                             let fundingElement = event.target.parentElement.parentElement.querySelector('[name="fundingSource"]');
                             displayElementSet(fundingElement, 6);
                         };
@@ -237,10 +257,10 @@
                     ev.preventDefault();
 
                     let assetModel = membrane_htmlElementToAssetModel(assetElement);                                     
-                    assetsContainerElement.innerHTML += html_buildRemovableAssetElement(assetModel);
+                    assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
-                    fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
-                    fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
+                    //fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
+                    //fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
 
                     assetElements = assetsContainerElement.querySelectorAll('.asset');
                     let mostRecentAssetElement = assetElements[assetElements.length -1];
@@ -251,13 +271,11 @@
                         let monthsElement = mostRecentAssetElement.querySelector('[name="monthsRemaining"]');
                         displayElementSet(monthsElement, 3);
                     }
-                    else if (isMonthlyExpenses(assetModel.instrument) || isMonthlyIncome(assetModel.instrument)) {
+                    else if (isMonthlyExpense(assetModel.instrument) || isMonthlyIncome(assetModel.instrument)) {
                         let fundingElement = mostRecentAssetElement.querySelector('[name="fundingSource"]');
                         displayElementSet(fundingElement, 6);
                     };
                     
-                    saveWorkingData();
-
                     calculate();
                 });                                            
             }
@@ -272,8 +290,6 @@
                         while (removeContainerNode.parentNode.id != 'assets')
                             removeContainerNode = removeContainerNode.parentNode;
                         assetsContainerElement.removeChild(removeContainerNode);
-
-                        saveWorkingData();
 
                         calculate();
                     }
@@ -326,10 +342,27 @@
 
         </script>
         <script>
-            <!-- charting -->
+            /* Tab handling */
+            function tab1_click() {
+                if (tab2.classList.contains('active')) {
+                    tab2.classList.remove('active');
+                    chartFlowCanvas.parentElement.style.display = 'none';
+                    tab1.classList.add('active');
+                    chartAssetCanvas.parentElement.style.display = '';
+                }
+            }
 
-            const ctx = document.getElementById("chartCanvas");
-            var activeChart = null;
+            function tab2_click() {
+                if (tab1.classList.contains('active')) {
+                    tab1.classList.remove('active');
+                    chartAssetCanvas.parentElement.style.display = 'none';
+                    tab2.classList.add('active');
+                    chartFlowCanvas.parentElement.style.display = '';
+                }
+            }
+        </script>
+        <script>
+            <!-- charting -->
 
             function ensureHighlightDisplayName() {
                 if (highlightDisplayName == null) {
@@ -347,17 +380,23 @@
                     }
                 }
             }
-
-            var jsonChartData = null;
-            
-            function updateChart() {
-                for (let ii = 0; ii < jsonChartData.data.datasets.length; ii++) {
-                    let dataSet = jsonChartData.data.datasets[ii];
+         
+            function updateCharts() {
+                for (let ii = 0; ii < charting_jsonAssetChartData.data.datasets.length; ii++) {
+                    let dataSet = charting_jsonAssetChartData.data.datasets[ii];
                     if (highlightDisplayName == null || dataSet.label == highlightDisplayName)
                         dataSet.backgroundColor = colorRange[ii];
                     else
                         dataSet.backgroundColor = 'whitesmoke';                    
-                    activeChart.update();
+                    activeAssetCanvas.update();
+                }
+                for (let jj = 0; jj < charting_jsonFlowChartData.data.datasets.length; jj++) {
+                    let dataSet = charting_jsonFlowChartData.data.datasets[jj];
+                    if (highlightDisplayName == null || dataSet.label == highlightDisplayName)
+                        dataSet.backgroundColor = colorRange[jj];
+                    else
+                        dataSet.backgroundColor = 'whitesmoke';                    
+                    activeFlowCanvas.update();
                 }
             }
 
@@ -377,16 +416,22 @@
                 // if there is a highlightDisplayName, make sure it's selected
                 ensureHighlightDisplayName();
 
-                // then build the chart
-                jsonChartData = charting_buildFromModelAssets(modelAssets)
+                // then build the charts
+                charting_buildFromModelAssets(modelAssets)
                 innerCalculate();
+
+                saveWorkingData();
             };
 
             function innerCalculate() {              
-                if (activeChart != null)
-                    activeChart.destroy();
-                if (jsonChartData != null)
-                    activeChart = new Chart(ctx, jsonChartData);
+                if (activeAssetCanvas != null)
+                    activeAssetCanvas.destroy();
+                if (activeFlowCanvas != null)
+                    activeFlowCanvas.destroy();
+                if (charting_jsonAssetsChartData != null)
+                    activeAssetCanvas = new Chart(chartAssetCanvas, charting_jsonAssetsChartData);
+                if (charting_jsonFlowsChartData != null)
+                    activeFlowCanvas = new Chart(chartFlowCanvas, charting_jsonFlowsChartData);
             }
 
             function save() {

@@ -37,7 +37,7 @@ function chronometer_applyMonth(currentDateInt, modelAssets) {
     };
 
     for (const modelAsset of modelAssets) {
-        if (isMonthlyExpenses(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
+        if (isMonthlyExpense(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
             if (modelAsset.inMonth(currentDateInt)) {
                 let fundingSourceAsset = findModelAssetByDisplayName(modelAssets, modelAsset.fundingSource);
                 if (fundingSourceAsset) {

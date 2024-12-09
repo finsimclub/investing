@@ -133,6 +133,32 @@ div.scrollable-x > .asset {
     width: 50%;
 }
 
+.tabs {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tab {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    width: 50%;
+}
+
+.tab.active {
+    background-color: #ccc;
+}
+
+.tab:hover {
+    background-color: #ddd;
+}
+
+.tabs::after {
+    clear: both;
+}
+
 .card-chart-color {
     float: right;
     height: 20px;

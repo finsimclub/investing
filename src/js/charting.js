@@ -20,16 +20,51 @@ const stackedBarChartConfig = {
     }
   };
 
-const stackedChartingData = {
+const stackedBarChartData = {
     labels: '',
     datasets: []
 };
 
-const stackedChartingDataSet = {
+const stackedBarChartDataSet = {
     label: null,
     data: null
-    //backgroundColor: 0x000011
  };
+
+const assetStackedBarChartExclusions = ['monthlyExpense', 'monthlyIncome'];
+
+const lineChartConfig = {
+  type: 'line',
+  data: null,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Cash Flow Chart'
+      }
+    }
+  },
+};
+
+const lineChartData = {
+  labels: '',
+  datasets: []
+};
+
+const lineChartDataSet = {
+  label: null,
+  data: null
+  //borderColor: Utils.CHART_COLORS.red,
+  //backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+};
+
+const flowLineChartExclusions = ['home','mortgage'];
+
+var charting_jsonAssetsChartData = null;
+var charting_jsonFlowsChartData = null;
 
 function charting_buildMonthsSpan(firstDateInt, lastDateInt) {
   let totalMonths = util_totalMonths(firstDateInt, lastDateInt);
@@ -61,7 +96,8 @@ function charting_buildMonthsSpan(firstDateInt, lastDateInt) {
 function charting_buildDisplayData(firstDateInt, lastDateInt, modelAssets) {
     let monthsSpan = charting_buildMonthsSpan(firstDateInt, lastDateInt);
     for (modelAsset of modelAssets) {
-      modelAsset.monthlyDataToDisplayData(monthsSpan);
+      modelAsset.monthlyAssetDataToDisplayAssetData(monthsSpan);
+      modelAsset.monthlyFlowDataToDisplayFlowData(monthsSpan);
     }    
 }
 
@@ -119,37 +155,98 @@ function charting_buildDisplayLabels(firstDateInt, lastDateInt) {
   return labels;
 }
 
-function charting_buildFromModelAssets(modelAssets) {
-    if (modelAssets == null || modelAssets.length == 0)
-      return null;
-    
-    let chartingConfig = JSON.parse(JSON.stringify(stackedBarChartConfig));    
-    let chartingData = JSON.parse(JSON.stringify(stackedChartingData));
+function charting_buildDisplayAssetsFromModelAssets(firstDateInt, lastDateInt, modelAssets) {
+  if (firstDateInt == null) {
+    console.log('charting_buildDisplayAssetsFromModelAssets - null firstDateInt provided');
+    return null;
+  }  
+  else if (lastDateInt == null) {
+    console.log('charting_buildDisplayAssetsFromModelAssets - null lastDateInt provided');
+    return null;
+  }
+  
+  let chartingAssetConfig = JSON.parse(JSON.stringify(stackedBarChartConfig));
+  let chartingAssetData = JSON.parse(JSON.stringify(stackedBarChartData));
 
-    let firstDateInt = util_firstDateInt(modelAssets);
-    let lastDateInt = util_lastDateInt(modelAssets);
-    charting_buildDisplayData(firstDateInt, lastDateInt, modelAssets); // stored as modelAsset.displayData
+  let labels = charting_buildDisplayLabels(firstDateInt, lastDateInt);
+  chartingAssetData.labels = labels;
 
-    let labels = charting_buildDisplayLabels(firstDateInt, lastDateInt);
-    chartingData.labels = labels;
-
-    let colorId = 0;
     for (const modelAsset of modelAssets) {
-        let chartingDataSet = JSON.parse(JSON.stringify(stackedChartingDataSet));
-        chartingDataSet.label = modelAsset.displayName;
-        chartingDataSet.data = modelAsset.displayData;
+        if (assetStackedBarChartExclusions.includes(modelAsset.instrument))
+            continue;
+
+        let chartingAssetDataSet = JSON.parse(JSON.stringify(stackedBarChartDataSet));
+
+        chartingAssetDataSet.label = modelAsset.displayName;
+        chartingAssetDataSet.data = modelAsset.displayAssetData;
         if (highlightDisplayName != null) {
             if (highlightDisplayName == modelAsset.displayName)
-                chartingDataSet.backgroundColor = colorRange[modelAsset.colorId];
+                chartingAssetDataSet.backgroundColor = colorRange[modelAsset.colorId];
             else
-                chartingDataSet.backgroundColor = 'whitesmoke'; 
+                chartingAssetDataSet.backgroundColor = 'whitesmoke'; 
         }
         else {
-          chartingDataSet.backgroundColor = colorRange[modelAsset.colorId];       
+          chartingAssetDataSet.backgroundColor = colorRange[modelAsset.colorId];       
         }
-        chartingData.datasets.push(chartingDataSet);
+        chartingAssetData.datasets.push(chartingAssetDataSet);
     }
 
-    chartingConfig.data = chartingData;
-    return chartingConfig;
+    chartingAssetConfig.data = chartingAssetData;
+    return chartingAssetConfig;
+}
+
+function charting_buildDisplayFlowsFromModelAssets(firstDateInt, lastDateInt, modelAssets) {
+  if (firstDateInt == null) {
+    console.log('charting_buildDisplayFlowsFromModelAssets - null firstDateInt provided');
+    return null;
+  }  
+  else if (lastDateInt == null) {
+    console.log('charting_buildDisplayFlowsFromModelAssets - null lastDateInt provided');
+    return null;
+  }
+  
+  let chartingFlowConfig = JSON.parse(JSON.stringify(lineChartConfig));    
+  let chartingFlowData = JSON.parse(JSON.stringify(lineChartData));
+  
+  let labels = charting_buildDisplayLabels(firstDateInt, lastDateInt);
+  chartingFlowData.labels = labels;
+
+  let colorId = 0;
+  for (const modelAsset of modelAssets) {
+    if (flowLineChartExclusions.includes(modelAsset.instrument))
+      continue;
+
+      let chartingFlowDataSet = JSON.parse(JSON.stringify(lineChartDataSet));
+
+      chartingFlowDataSet.label = modelAsset.displayName;
+      chartingFlowDataSet.data = modelAsset.displayFlowData;
+      if (highlightDisplayName != null) {
+          if (highlightDisplayName == modelAsset.displayName)
+              chartingFlowDataSet.backgroundColor = colorRange[modelAsset.colorId];
+          else
+              chartingFlowDataSet.backgroundColor = 'whitesmoke'; 
+      }
+      else {
+        chartingFlowDataSet.backgroundColor = colorRange[modelAsset.colorId];       
+      }
+      chartingFlowData.datasets.push(chartingFlowDataSet);
+  }
+
+  chartingFlowConfig.data = chartingFlowData;
+  return chartingFlowConfig;
+}
+
+function charting_buildFromModelAssets(modelAssets) {
+  if (modelAssets == null || modelAssets.length == 0) {
+    console.log('charting_buildFromModelAssets - null or zero length array provided');
+    return null;
+  }
+ 
+  let firstDateInt = util_firstDateInt(modelAssets);
+  let lastDateInt = util_lastDateInt(modelAssets);
+
+  charting_buildDisplayData(firstDateInt, lastDateInt, modelAssets);
+
+  charting_jsonAssetsChartData = charting_buildDisplayAssetsFromModelAssets(firstDateInt, lastDateInt, modelAssets);
+  charting_jsonFlowsChartData = charting_buildDisplayFlowsFromModelAssets(firstDateInt, lastDateInt, modelAssets);
 }

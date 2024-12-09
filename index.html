@@ -176,7 +176,7 @@
                         displayElementSet(monthsElement, 3);
                     }
                     // TODO - a better way to hide labels than child position
-                    else if (isMonthlyExpenses(event.target.value) || isMonthlyIncome(event.target.value)) {
+                    else if (isMonthlyExpense(event.target.value) || isMonthlyIncome(event.target.value)) {
                         displayElementSet(fundingElement, 6);
                     }
                 });
@@ -195,7 +195,7 @@
                             let monthsElement = event.target.parentElement.parentElement.querySelector('[name="monthsRemaining"]');
                             displayElementSet(monthsElement, 3);
                         }
-                        else if (isMonthlyExpenses(event.target.value) || isMonthlyIncome(event.target.value)) {
+                        else if (isMonthlyExpense(event.target.value) || isMonthlyIncome(event.target.value)) {
                             let fundingElement = event.target.parentElement.parentElement.querySelector('[name="fundingSource"]');
                             displayElementSet(fundingElement, 6);
                         };
@@ -212,7 +212,7 @@
                     ev.preventDefault();
 
                     let assetModel = membrane_htmlElementToAssetModel(assetElement);                                     
-                    assetsContainerElement.innerHTML += html_buildRemovableAssetElement(assetModel);
+                    assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
                     fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
                     fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
@@ -226,7 +226,7 @@
                         let monthsElement = mostRecentAssetElement.querySelector('[name="monthsRemaining"]');
                         displayElementSet(monthsElement, 3);
                     }
-                    else if (isMonthlyExpenses(assetModel.instrument) || isMonthlyIncome(assetModel.instrument)) {
+                    else if (isMonthlyExpense(assetModel.instrument) || isMonthlyIncome(assetModel.instrument)) {
                         let fundingElement = mostRecentAssetElement.querySelector('[name="fundingSource"]');
                         displayElementSet(fundingElement, 6);
                     };
