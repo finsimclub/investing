@@ -114,7 +114,7 @@ class Currency {
     }
 
     toCurrency() {
-        return this.amount.toFixed(2)
+        return parseFloat(this.amount.toFixed(2));
     }
 
     toString() {

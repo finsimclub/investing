@@ -55,8 +55,8 @@ const lineChartData = {
 };
 
 const lineChartDataSet = {
-  label: null,
-  data: null
+  label: '',
+  data: []
   //borderColor: Utils.CHART_COLORS.red,
   //backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
 };
@@ -231,6 +231,32 @@ function charting_buildDisplayFlowsFromModelAssets(firstDateInt, lastDateInt, mo
       }
       chartingFlowData.datasets.push(chartingFlowDataSet);
   }
+
+  // determine total cash flow
+  let cashFlowDataSet = JSON.parse(JSON.stringify(lineChartDataSet));
+  cashFlowDataSet.label = 'Cash Flow';
+
+  let firstModelAsset = true;
+  for (const modelAsset of modelAssets) {
+    if (flowLineChartExclusions.includes(modelAsset.instrument))
+      continue;
+
+    for (let ii = 0; ii < modelAsset.displayFlowData.length; ii++) {
+      if (firstModelAsset)
+        cashFlowDataSet.data.push(modelAsset.displayFlowData[ii]);
+      else
+        cashFlowDataSet.data[ii] += modelAsset.displayFlowData[ii];
+      
+      if (cashFlowDataSet.data[ii] > 0.0)
+          cashFlowDataSet.backgroundColor = positiveBackgroundColor;
+      else if (cashFlowDataSet.data[ii] < 0.0)
+          cashFlowDataSet.backgroundColor = negativeBackgroundColor;
+    }
+
+    firstModelAsset = false;
+  }
+
+  chartingFlowData.datasets.push(cashFlowDataSet);
 
   chartingFlowConfig.data = chartingFlowData;
   return chartingFlowConfig;
