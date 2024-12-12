@@ -18,6 +18,7 @@ function chronometer_applyMonths(modelAssets) {
         }
 
         summary_setAccruedMonths(totalMonths);
+        summary_computeCAGR()
     }
 }
 
