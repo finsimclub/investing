@@ -382,22 +382,10 @@
             }
          
             function updateCharts() {
-                for (let ii = 0; ii < charting_jsonAssetChartData.data.datasets.length; ii++) {
-                    let dataSet = charting_jsonAssetChartData.data.datasets[ii];
-                    if (highlightDisplayName == null || dataSet.label == highlightDisplayName)
-                        dataSet.backgroundColor = colorRange[ii];
-                    else
-                        dataSet.backgroundColor = 'whitesmoke';                    
-                    activeAssetCanvas.update();
-                }
-                for (let jj = 0; jj < charting_jsonFlowChartData.data.datasets.length; jj++) {
-                    let dataSet = charting_jsonFlowChartData.data.datasets[jj];
-                    if (highlightDisplayName == null || dataSet.label == highlightDisplayName)
-                        dataSet.backgroundColor = colorRange[jj];
-                    else
-                        dataSet.backgroundColor = 'whitesmoke';                    
-                    activeFlowCanvas.update();
-                }
+                let modelAssets = membrane_htmlElementsToAssetModels();
+                charting_buildFromModelAssets(modelAssets, false);
+                activeAssetCanvas.update(); 
+                activeFlowCanvas.update();                
             }
 
             function calculate() {
@@ -417,7 +405,7 @@
                 ensureHighlightDisplayName();
 
                 // then build the charts
-                charting_buildFromModelAssets(modelAssets)
+                charting_buildFromModelAssets(modelAssets, true)
                 innerCalculate();
 
                 saveWorkingData();

@@ -58,7 +58,7 @@ class ModelAsset {
         return new ModelAsset(instrument, displayName, startDateInt, startCurrency, finishDateInt, monthsRemaining, finishCurrency, annualReturnRate);
     }
 
-    static parseHTML(htmlElements) {
+    static parseHTML(htmlElements, colorRGB) {
         let instrument = null;
         let displayName = null;
         let startDateInt = null;
@@ -93,6 +93,15 @@ class ModelAsset {
         let modelAsset = new ModelAsset(instrument, displayName, startDateInt, startCurrency, finishDateInt, monthsRemaining, finishCurrency, annualReturnRate);
         // because fundingSource is usually null, let's set it outside the constructor in case we want to do anything interesting
         modelAsset.fundingSource = fundingSource;
+
+        let colorHex = rgb2hex(colorRGB)
+        for (let ii = 0; ii < colorRange.length; ii++) {
+            if (colorHex == colorRange[ii]) {
+                this.colorId = ii;
+                break;
+            }
+        }
+
         return modelAsset;
     }
 

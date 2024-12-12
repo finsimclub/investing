@@ -51,7 +51,8 @@ function membrane_rawModelDataToModelAsset(rawModelData) {
 
 function membrane_htmlElementToAssetModel (assetElement) {
     const inputElements = assetElement.querySelectorAll('input, select');
-    return ModelAsset.parseHTML(inputElements);
+    const colorElement = assetElement.querySelector('.card-chart-color');
+    return ModelAsset.parseHTML(inputElements, colorElement.style.backgroundColor);
 }
 
 function membrane_htmlElementsToAssetModels () {

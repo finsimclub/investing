@@ -260,9 +260,6 @@
         <script>
             <!-- charting -->
 
-            const ctx = document.getElementById("chartCanvas");
-            var activeChart = null;
-
             function calculate() {
                 let modelAssets = membrane_htmlElementsToAssetModels();
                 chronometer_applyMonths(modelAssets);
@@ -271,15 +268,8 @@
                 assetsContainerElement.innerHTML = membrane_modelAssetsToHTML(modelAssets);
 
                 // then build the chart
-                let jsonChartData = charting_buildFromModelAssets(modelAssets)
-                innerCalculate(jsonChartData);
+                charting_buildFromModelAssets(modelAssets)
             };
-
-            function innerCalculate(jsonData) {              
-                if (activeChart != null)
-                    activeChart.destroy();
-                activeChart = new Chart(ctx, jsonData);
-            }
 
             function save() {
                 let assetsContainerElementInnerHTML = assetsContainerElement.innerHTML;

@@ -81,7 +81,7 @@ const positiveBackgroundColor = '#76ad76';
 const negativeBackgroundColor = '#ad7676';
 
 //const colorRange = ['#33cc00','#cc3300','#0033cc','#cc9900','#00cc99','#9900cc','#cc33cc','#cc3333','#556B2F','#8FBC8B'];
-const colorRange = ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6','#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11','#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#651067'];
+const colorRange = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#3b3eac', '#0099c6','#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11','#6633cc', '#e67300', '#8b0707', '#329262', '#5574a6', '#651067'];
 
 function html_buildInstrumentOptions(instrument) {
     let html = '';
