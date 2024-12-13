@@ -135,14 +135,15 @@ div.scrollable-x > .asset {
 
 .tabs {
     overflow: hidden;
-    border: 1px solid #ccc;
+    border: 2px solid #000;
+    border-radius: 10px;
     background-color: #f1f1f1;
 }
 
 .tab {
     background-color: inherit;
     float: left;
-    border: none;
+    border: 1px whitesmoke;
     outline: none;
     width: 50%;
 }
