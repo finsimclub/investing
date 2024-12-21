@@ -215,7 +215,7 @@
                     assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
                     fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
-                    fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
+                    fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null, null, null);
 
                     assetElements = assetsContainerElement.querySelectorAll('.asset');
                     let mostRecentAssetElement = assetElements[assetElements.length -1];

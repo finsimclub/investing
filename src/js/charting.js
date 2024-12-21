@@ -247,10 +247,13 @@ function charting_buildCashFlowDataSet(modelAssets) {
       continue;
 
     for (let ii = 0; ii < modelAsset.displayFlowData.length; ii++) {
+      let displayData = modelAsset.displayFlowData[ii];
+      if (displayData == null)
+        displayData = 0.0;
       if (firstModelAsset)
-        cashFlowDataSet.data.push(modelAsset.displayFlowData[ii]);
+        cashFlowDataSet.data.push(displayData);
       else
-        cashFlowDataSet.data[ii] += modelAsset.displayFlowData[ii];
+        cashFlowDataSet.data[ii] += displayData;
 
       if (cashFlowDataSet.data[ii] > 0.0)
         cashFlowDataSet.backgroundColor = positiveBackgroundColor;

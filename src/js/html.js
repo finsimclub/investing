@@ -37,15 +37,24 @@ const htmlAssetBody =
         <input type="number" class="width-full" name="finishValue" value="$FINISHVALUE$" step="0.01" placeholder="computed" readonly />
     </div>
 </div>
-<div class="width-full" style="float: left; padding-top: 10px">    
-    <label for="annualReturnRate">Annual Return %</label><br />
-    <input type="number" style="width: 125px" name="annualReturnRate" step="0.01" value="$ANNUALRETURNRATE$" placeholder="annual return rate" required /><br />
-    <label for="accumulatedValue">Accumulated Value</label><br />
-    <input type="number" style="width: 125px" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" /><br />
+<div class="width-full" style="float: left; padding-top: 10px">
+    <div style="float: left; width: 55%">    
+        <label for="annualReturnRate">Annual Return %</label><br />
+        <input type="number" class="width-full" name="annualReturnRate" step="0.01" value="$ANNUALRETURNRATE$" placeholder="annual return rate" required />        
+    </div>
+    <div style="float: left; width: 45%">
+        $MONTHSREMAININGDISPLAY$
+    </div>
 </div>
 <div class="width-full" style="float: left; padding-top: 10px">
-    $INVISIBLEPLACEHOLDER$
-    $MONTHSREMAININGDISPLAY$
+    <div style="float: left; width: 55%">    
+        <label for="accumulatedValue">Accumulated Value</label><br />
+        <input type="number" class="width-full" name="accumulatedValue" step="0.01" value="$ACCUMULATEDVALUE$" placeholder="accumulated value" />
+    </div>
+    <div style="flat: left; width: 45%:">
+    </div>
+</div>
+<div class="width-full" style="float: left; padding-top: 10px">    
     $FUNDINGSOURCEDISPLAY$
 </div>`;
 
@@ -61,8 +70,8 @@ const htmlMonthsRemainingDisplay = `<label class="hidable" for="monthsRemaining"
 const htmlMonthsRemainingHidden = `<label class="hidable" for="monthsRemaining" style="display: none">Months Remaining</label><br class="hidable" style="display: none" />
     <input class="hidable" type="number" style="display: none; width: 125px" name="monthsRemaining" value="$MONTHSREMAINING$" placeholder="months" />`;
 
-const htmlFundingSourceDisplay = `<label class="hidable" for="fundingSource">Apply to Card</label><br class="hidable" />
-    <select class="hidable width-full" name="fundingSource">
+const htmlFundingSourceDisplay = `<label for="fundingSource">Apply to Card</label><br />
+    <select class="width-full" name="fundingSource">
         $FUNDINGSOURCEOPTIONS$
     </select>`;
 
@@ -94,14 +103,14 @@ function html_buildInstrumentOptions(instrument) {
     return html;
 }
 
-function html_buildFundingSourceOptions(modelAssets, fundingSource) {
+function html_buildFundingSourceOptions(modelAssets, currentDisplayName, fundingSource) {
     if (modelAssets == null) {
         console.log('html_buildFundingSourceOptions - modelAssets is null; querying html assets');
         modelAssets = membrane_htmlElementsToAssetModels();    
     }
     let html = '<option value="none">None</option>';
     for (const modelAsset of modelAssets) {
-        if (isFundableAsset(modelAsset.instrument)) {
+        if (isFundableAsset(modelAsset.instrument) && modelAsset.displayName != currentDisplayName) {
             html += '<option value="' + modelAsset.displayName + '"';
             if (modelAsset.displayName == fundingSource)
                 html += ' selected';
@@ -117,11 +126,6 @@ function html_buildAssetHeader(modelAsset) {
     html = html.replace('$INSTRUMENTOPTIONS$', html_buildInstrumentOptions(modelAsset.instrument));     
     return html;
 }
-
-//function html_buildAssetBody(fundingSource) {
-//    let html = htmlAssetBody;
-//    return html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(fundingSource));
-//}
 
 function html_buildRemovableAssetElement(modelAssets, modelAsset) {
     let html = (html_buildAssetHeader(modelAsset)).slice();
@@ -143,28 +147,17 @@ function html_buildRemovableAssetElement(modelAssets, modelAsset) {
     else
         html = html.replace('$ACCUMULATEDVALUE$', '0.0');   
 
-    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument) || isMonthlyExpense(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
-        html = html.replace('$INVISIBLEPLACEHOLDER$', htmlInvisibleHidden);
-        if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument)) {
-            html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingDisplay);
-            html = html.replace("$FUNDINGSOURCEDISPLAY$", htmlFundingSourceHidden);      
-        }
-        else if (isMonthlyExpense(modelAsset.instrument) || isMonthlyIncome(modelAsset.instrument)) {
-            html = html.replace('$FUNDINGSOURCEDISPLAY$', htmlFundingSourceDisplay);
-            html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingHidden);
-        }
-        else {
-            console.log('html_buildRemovableAssetElement - confused by isMortgage, isDebt, isMonthlyExpese');
-        }
+    html = html.replace('$FUNDINGSOURCEDISPLAY$', htmlFundingSourceDisplay);
+    
+    if (isMortgage(modelAsset.instrument) || isDebt(modelAsset.instrument)) {
+        html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingDisplay);
     }
     else {
-        html = html.replace('$INVISIBLEPLACEHOLDER$', htmlInvisibleDisplay);
-        html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingHidden);
-        html = html.replace('$FUNDINGSOURCEDISPLAY$', htmlFundingSourceHidden);
+        html = html.replace('$MONTHSREMAININGDISPLAY$', htmlMonthsRemainingHidden);    
     }
 
     html = html.replace('$MONTHSREMAINING$', modelAsset.monthsRemaining);  
-    html = html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(modelAssets, modelAsset.fundingSource));
+    html = html.replace('$FUNDINGSOURCEOPTIONS$', html_buildFundingSourceOptions(modelAssets, modelAsset.displayName, modelAsset.fundingSource));
 
     if (modelAsset.accumulatedCurrency.amount > 0)
         html = html.replace('$BACKGROUND-COLOR$', positiveBackgroundColor + ';');

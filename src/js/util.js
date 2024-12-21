@@ -277,6 +277,8 @@ function isFundableAsset(value) {
         return true;
     else if (value == sInstrumentNames[sInstrumentsIDs.corpBond])
         return true;
+    else if (value == sInstrumentNames[sInstrumentsIDs.debt])
+        return true;
     else
         return false;
 }

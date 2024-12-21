@@ -58,7 +58,7 @@ class ModelAsset {
         return new ModelAsset(instrument, displayName, startDateInt, startCurrency, finishDateInt, monthsRemaining, finishCurrency, annualReturnRate);
     }
 
-    static parseHTML(htmlElements, colorRGB) {
+    static parseHTML(htmlElements, colorElement) {
         let instrument = null;
         let displayName = null;
         let startDateInt = null;
@@ -94,11 +94,13 @@ class ModelAsset {
         // because fundingSource is usually null, let's set it outside the constructor in case we want to do anything interesting
         modelAsset.fundingSource = fundingSource;
 
-        let colorHex = rgb2hex(colorRGB)
-        for (let ii = 0; ii < colorRange.length; ii++) {
-            if (colorHex == colorRange[ii]) {
-                this.colorId = ii;
-                break;
+        if (colorElement) {
+            let colorHex = rgb2hex(colorElement.style.backgroundColor)
+            for (let ii = 0; ii < colorRange.length; ii++) {
+                if (colorHex == colorRange[ii]) {
+                    this.colorId = ii;
+                    break;
+                }
             }
         }
 
@@ -263,11 +265,20 @@ class ModelAsset {
             this.monthlyTotal.push(this.finishCurrency.toCurrency());
         }
         else {
-            this.monthlyDelta.push('$0.00');
-            this.monthlyTotal.push('$0.00');
+            this.monthlyDelta.push(0.0);
+            this.monthlyTotal.push(0.0);
         }
 
         return isInMonth;
+    }
+
+    isFinishDateInt(aDateInt) {
+        if (aDateInt == null) {
+            console.log('model.isFinishDateInt passed null test');
+            return false;
+        }
+
+        return this.finishDateInt.year == aDateInt.year && this.finishDateInt.month == aDateInt.month;
     }
 
     monthlyAssetDataToDisplayAssetData(monthsSpan) {

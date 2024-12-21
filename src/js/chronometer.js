@@ -46,6 +46,12 @@ function chronometer_applyMonth(currentDateInt, modelAssets) {
                 }
             }
         }
+        else if (modelAsset.isFinishDateInt(currentDateInt)) {
+            let fundingSourceAsset = findModelAssetByDisplayName(modelAssets, modelAsset.fundingSource);
+            if (fundingSourceAsset) {
+                fundingSourceAsset.finishCurrency.add(modelAsset.finishCurrency);
+            }
+        }
     }
 
     summary_setStartValue(startTotal);

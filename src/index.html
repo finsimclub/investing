@@ -70,16 +70,18 @@
                             </div>
                         </div>
                         <div class="width-full" style="float: left; padding-top: 10px">
-                            <label for="annualReturnRate">Annual Return %</label><br />
-                            <input type="number" style="width: 125px" name="annualReturnRate" step="0.01" placeholder="in decimal" required /><br />                                
+                            <div style="float: left; width: 55%">    
+                                <label for="annualReturnRate">Annual Return %</label><br />
+                                <input type="number" class="width-full" name="annualReturnRate" step="0.01" placeholder="in decimal" required />        
+                            </div>
+                            <div style="float: left; width: 45%">
+                                <label class="hidable" style="display: none" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none">
+                                <input class="hidable width-full" type="number" style="display: none" name="monthsRemaining" value="321" placeholder="months">
+                            </div>
                         </div>
-                        <div class="width-full" style="float: left; padding-bottom: 10px;">
-                            <label class="invisible" for="invisiblePlaceholder">Invisible</label><br class="invisible" />
-                            <input class="invisible" type="number" style="width: 125px;" name="invisiblePlaceholder" placeholder="invisible" />
-                            <label class="hidable" style="display: none;" for="monthsRemaining">Months Remaining</label><br class="hidable" style="display: none;" />
-                            <input class="hidable" type="number" style="display: none; width: 125px" name="monthsRemaining" placeholder="months" />
-                            <label class="hidable" style="display: none;" for="fundingSource">Apply to Card</label><br class="hidable" style="display: none;" />
-                            <select class="hidable width-full" style="display: none;" name="fundingSource">
+                        <div class="width-full" style="float: left; padding-top: 10px; padding-bottom: 10px;">                           
+                            <label for="fundingSource">Apply to Card</label><br />
+                            <select class="width-full" name="fundingSource">
                                 <option value="none">None</option>
                             </select>
                         </div>
@@ -218,11 +220,7 @@
                 instrumentElement.addEventListener('change', function(event) {
                     hideElementsWithScope(assetElement);
                     if (isMortgage(event.target.value) || isDebt(event.target.value)) {
-                        displayElementSet(monthsElement, 3);
-                    }
-                    // TODO - a better way to hide labels than child position
-                    else if (isMonthlyExpense(event.target.value) || isMonthlyIncome(event.target.value)) {
-                        displayElementSet(fundingElement, 6);
+                        displayElementSet(monthsElement, 0);
                     }
                 });
 
@@ -238,12 +236,8 @@
                         hideElementsWithScope(event.target.parentElement.parentElement);
                         if (isMortgage(event.target.value) || isDebt(event.target.value)) {
                             let monthsElement = event.target.parentElement.parentElement.querySelector('[name="monthsRemaining"]');
-                            displayElementSet(monthsElement, 3);
+                            displayElementSet(monthsElement, 0);
                         }
-                        else if (isMonthlyExpense(event.target.value) || isMonthlyIncome(event.target.value)) {
-                            let fundingElement = event.target.parentElement.parentElement.querySelector('[name="fundingSource"]');
-                            displayElementSet(fundingElement, 6);
-                        };
                     }
                     else if (event.target.name == 'fundingSource') {
                         console.log('assetsContainerElement.fundingElement.change');
@@ -259,9 +253,6 @@
                     let assetModel = membrane_htmlElementToAssetModel(assetElement);                                     
                     assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
-                    //fundingSourceElement = assetElement.querySelector('[name="fundingSource"]');
-                    //fundingSourceElement.innerHTML = html_buildFundingSourceOptions(null);
-
                     assetElements = assetsContainerElement.querySelectorAll('.asset');
                     let mostRecentAssetElement = assetElements[assetElements.length -1];
                     
@@ -269,15 +260,14 @@
                     
                     if (isMortgage(assetModel.instrument) || isDebt(assetModel.instrument)) {
                         let monthsElement = mostRecentAssetElement.querySelector('[name="monthsRemaining"]');
-                        displayElementSet(monthsElement, 3);
+                        displayElementSet(monthsElement, 0);
                     }
-                    else if (isMonthlyExpense(assetModel.instrument) || isMonthlyIncome(assetModel.instrument)) {
-                        let fundingElement = mostRecentAssetElement.querySelector('[name="fundingSource"]');
-                        displayElementSet(fundingElement, 6);
-                    };
                     
                     calculate();
-                });                                            
+                });
+                
+                let fundingOptionsHtml = html_buildFundingSourceOptions(null, null, null);
+                assetElement.querySelector('[name="fundingSource"]').innerHTML = fundingOptionsHtml;
             }
 
             function connectRemoveAsset() {
