@@ -252,7 +252,8 @@
                 assetElement.addEventListener("submit", function(ev) {
                     ev.preventDefault();
 
-                    let assetModel = membrane_htmlElementToAssetModel(assetElement);                                     
+                    let assetModel = membrane_htmlElementToAssetModel(assetElement); 
+                    gtag("event", "form_submit", assetModel);                                    
                     assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
                     assetElements = assetsContainerElement.querySelectorAll('.asset');
