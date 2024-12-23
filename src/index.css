@@ -1,11 +1,11 @@
 body {
     margin: 0;
     height: 100vh;    
-    background: linear-gradient(to bottom, #ccd2d4, #818999);
+    background: linear-gradient(to bottom, #e3e6e7, #bed8e0);
 }
 
 nav {
-    background-color: #333;
+    background-color: #6e7d81;
 }
 
 nav ul {
@@ -25,6 +25,13 @@ nav ul li a {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+}
+
+nav ul li u {
+    display: block;
+    color: lightblue;
+    text-align: center;
+    padding: 14px 16px;
 }
 
 nav ul li a:hover {

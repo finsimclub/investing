@@ -12,6 +12,7 @@
         <meta name="description" content="Financial Simulation Club for Saving, Investment, and Retirement">
         <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
         <title>📈 Financial Simulation Club for Saving, Investing, and Retiring</title>
+        <script src="js/util.js"></script>
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
@@ -19,13 +20,14 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="rules.html">Rules</a></li>
-                <li><a href="globals.html">Globals</a></li>
-                <li><u>About</u></li>
+                <li><u>Globals</u></li>
+                <li><a href="about.html">About</a></li>
             </ul>
         </nav>
-        <h1>About Financial Simulation (FinSim) Club</h1>
-        <p>I used to run a nationwide indirect sales tax solution and now I'm interested in financial simulations. Visit <a href="https://github.com/finsimclub/investing">GitHub</a> to view the code and create issues/suggestions. There will also be a patreon for prioritized features and fixes.</p>
-        <p>YouTube channel coming as soon as I watch a few more 'so you want to start a YouTube channel' videos.</p>
-        <p>Feel free to email me at <a href="mailto:john@finsim.club">john@finsim.club</a></p>
+        <h1>Global Values for Simulation</h1>
+        <h2>Annual Inflation Rate</h2>
+        <p>The government began tracking inflation back in 1913. Over that time cumulative inflation has averaged 3.1%. <a href="https://inflationdata.com/Inflation/Inflation_Rate/Long_Term_Inflation.asp">Reference</a></p>
+        <label>Default Inflation Rate</label>
+        <input type="number" value="3.1" step="0.01" readonly />
     </body>
 </html>
