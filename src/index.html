@@ -1,14 +1,14 @@
 <html>
 
     <head>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0MW76QRC5"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-B0MW76QRC5');
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-5WDBJZSQ');
         </script>
+    <!-- End Google Tag Manager -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Financial Simulation Club for Saving, Investment, and Retirement">
@@ -25,6 +25,10 @@
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WDBJZSQ"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
         <nav>
             <ul>
                 <li><u>Home</u></li>
@@ -162,11 +166,6 @@
         <div style="padding: 10px" class="scrollable-x" id="assets"></div>
         <br />&nbsp;<br />
         <script>
-            <!-- Global Definitions -->
-            var gAssetsAPI = 'http://127.0.0.1:8000/html/assets/';
-            var gChartingAPI = 'http://127.0.0.1:8000/json/charting/'
-        </script>
-        <script>
             <!-- these are dynamic functions -->
 
             var containerElement = document.getElementById('container');
@@ -253,7 +252,7 @@
                     ev.preventDefault();
 
                     let assetModel = membrane_htmlElementToAssetModel(assetElement); 
-                    gtag("event", "form_submit", assetModel);                                    
+                    gtag("event", "add_asset", null);                                    
                     assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
                     assetElements = assetsContainerElement.querySelectorAll('.asset');
