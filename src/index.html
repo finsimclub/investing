@@ -252,7 +252,7 @@
                     ev.preventDefault();
 
                     let assetModel = membrane_htmlElementToAssetModel(assetElement); 
-                    gtag("event", "add_asset", null);                                    
+                    gtag("event", "asset_add", null);                                    
                     assetsContainerElement.innerHTML += html_buildRemovableAssetElement(null, assetModel);
 
                     assetElements = assetsContainerElement.querySelectorAll('.asset');
