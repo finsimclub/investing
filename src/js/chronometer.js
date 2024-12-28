@@ -13,7 +13,7 @@ function chronometer_applyMonths(modelAssets) {
 
         let currentDateInt = new DateInt(firstDateInt.toInt());
         while (currentDateInt.toInt() <= lastDateInt.toInt()) {
-            totalMonths += chronometer_applyMonth(currentDateInt, modelAssets);
+            totalMonths += chronometer_applyMonth(firstDateInt, lastDateInt, currentDateInt, modelAssets);
             currentDateInt.next();
         }
 
@@ -22,7 +22,7 @@ function chronometer_applyMonths(modelAssets) {
     }
 }
 
-function chronometer_applyMonth(currentDateInt, modelAssets) {
+function chronometer_applyMonth(firstDateInt, lastDateInt, currentDateInt, modelAssets) {
     let startTotal = new Currency(0.0);
     let finishTotal = new Currency(0.0);
     let accumulatedValue = new Currency(0.0);
@@ -30,8 +30,10 @@ function chronometer_applyMonth(currentDateInt, modelAssets) {
 
     for (const modelAsset of modelAssets) {
         if (modelAsset.applyMonth(currentDateInt)) {
-            startTotal.add(modelAsset.startCurrency);        
-            finishTotal.add(modelAsset.finishCurrency);
+            if (firstDateInt.toInt() == currentDateInt.toInt())
+                startTotal.add(modelAsset.startCurrency);
+            if (lastDateInt.toInt() == currentDateInt.toInt())
+                finishTotal.add(modelAsset.finishCurrency);
             accumulatedValue.add(modelAsset.accumulatedCurrency);
             ++totalMonths;
         }
@@ -54,8 +56,12 @@ function chronometer_applyMonth(currentDateInt, modelAssets) {
         }
     }
 
-    summary_setStartValue(startTotal);
-    summary_setFinishValue(finishTotal);  
+    if (firstDateInt.toInt() == currentDateInt.toInt())
+        summary_setStartValue(startTotal);
+
+    if (lastDateInt.toInt() == currentDateInt.toInt())
+        summary_setFinishValue(finishTotal);  
+    
     summary_setAccumulatedValue(accumulatedValue);
 
     return totalMonths;
