@@ -1,3 +1,3 @@
-See finsim in action here:
+Moved to Charting.finance
 
-https://finsim.club
+https://charting.finance
